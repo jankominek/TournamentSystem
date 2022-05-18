@@ -1,6 +1,9 @@
 package com.service.application_service.controller;
 
+import com.service.application_service.DTO.RegistrationUserDto;
 import com.service.application_service.service.UserService;
+import com.service.application_service.utils.ConfirmationToken;
+import com.service.application_service.utils.UserConfirmationToken;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -14,9 +17,14 @@ public class SigningController {
     UserService userService;
 
     @PostMapping("/register")
-    public Boolean registerUser(@RequestBody UserDDTOO userDto){
+    public Boolean registerUser(@RequestBody RegistrationUserDto userDto){
         System.out.println("username " + userDto.getUsername());
-        return userService.createUser(userDto.getUsername(), userDto.getPassword());
+        return userService.createUser(userDto);
+    }
+
+    @PostMapping("/register/confirm")
+    public Boolean confirm(@RequestBody UserConfirmationToken userConfirmationToken){
+        return userService.confirm(userConfirmationToken);
     }
 
 }
@@ -24,5 +32,7 @@ public class SigningController {
 @Data
 class UserDDTOO{
     String username;
+    String firstName;
+    String lastName;
     String password;
 }

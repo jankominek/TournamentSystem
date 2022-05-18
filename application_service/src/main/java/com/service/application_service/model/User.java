@@ -1,5 +1,6 @@
 package com.service.application_service.model;
 
+import com.service.application_service.utils.ConfirmationToken;
 import lombok.Builder;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
@@ -25,6 +26,8 @@ public class User implements UserDetails {
     private boolean isAccountNonLocked;
     private boolean isCredentialsNonExpired;
     private boolean isEnabled;
+
+    private ConfirmationToken userConfirmationToken;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
