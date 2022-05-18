@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/TournamentSystem.iml" filepath="$PROJECT_DIR$/.idea/TournamentSystem.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../mPacjent/application_service/application_service.iml" filepath="$PROJECT_DIR$/../mPacjent/application_service/application_service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../mPacjent/application_view/application_view.iml" filepath="$PROJECT_DIR$/../mPacjent/application_view/application_view.iml" />
     </modules>
   </component>
 </project>
