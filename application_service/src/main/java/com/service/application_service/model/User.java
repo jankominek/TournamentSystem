@@ -8,7 +8,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
-import java.util.List;
 
 @Data
 @Builder
@@ -18,17 +17,14 @@ public class User implements UserDetails {
     @Id
     private String id;
     private String username;
+    private String firstName;
+    private String lastName;
     private String password;
     Collection<? extends GrantedAuthority> grantedAuthorities;
     private boolean isAccountNonExpired;
     private boolean isAccountNonLocked;
     private boolean isCredentialsNonExpired;
     private boolean isEnabled;
-
-    private String notificationToken;
-
-    private List<Appointment> appointments;
-    private List<Notification> notifications;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

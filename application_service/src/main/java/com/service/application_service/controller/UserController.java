@@ -44,10 +44,6 @@ public class UserController {
         return null;
     }
 
-    @PostMapping("/user/updateExpotoken")
-    public void updateExpoUserToken(@RequestBody UserExpoToken userExpoToken){
-        userService.updateExpoUserToken(userExpoToken.getUsername(), userExpoToken.getToken());
-    }
 
     @GetMapping("/user/users")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
