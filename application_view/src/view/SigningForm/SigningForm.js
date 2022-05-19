@@ -1,10 +1,13 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button } from '../../components/Button/Button'
 import { Input } from '../../components/Input/Input'
 import { Flex, SigningBox, SigningFormWrapper, SigningModalWrapper } from './SigningForm.styled'
 import axios from 'axios';
 import { Modal } from '../../components/Modal/Modal';
 import { ConfirmTokenModal } from '../../utils/ConfirmTokenModal';
+import { useDispatch, useSelector } from 'react-redux';
+import { setUserState } from '../../redux/User';
+import setAxiosConfig from '../../utils/axiosConfiguration';
 
 export const SigningForm = (props) => {
 
@@ -12,6 +15,24 @@ export const SigningForm = (props) => {
 
   const [userCredentials, setUserCredentials] = useState({});
   const [isModalShowing, setIsModalShowing] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  const userState = useSelector( state => state.user);
+  const dispatch = useDispatch();
+  console.log(userState);
+  setAxiosConfig();
+  useEffect( () => {
+    if(isLoggedIn){
+      
+    }
+  }, [isLoggedIn])
+
+  const getUser = () => {
+      axios.get("http://localhost:8079/service/api/user/logged")
+        .then( (response) => {
+            console.log("RESPONSE " , response.data)
+        })
+  }
 
     const onChangeInput = (e) => {
         setUserCredentials({
@@ -25,7 +46,11 @@ export const SigningForm = (props) => {
     const onLoginClick = () => {
       axios.post("http://localhost:8079/login", userCredentials)
         .then( (response) => {
-            console.log(response);
+          console.log(response)
+            if(response.status == 200){
+                // getUser();
+                setIsLoggedIn(true)
+            }
         })
     }
 

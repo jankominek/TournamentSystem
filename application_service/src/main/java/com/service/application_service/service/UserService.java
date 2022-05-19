@@ -16,8 +16,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -54,6 +57,8 @@ public class UserService implements UserDetailsService {
                 .firstName(userDto.getFirstName())
                 .lastName(userDto.getLastName())
                 .password(passwordConfig.passwordEncoder().encode(userDto.getPassword()))
+                .tournaments(Collections.EMPTY_LIST)
+                .rank(0)
                 .userConfirmationToken(confirmationToken)
                 .grantedAuthorities(UserRole.USER.getGrantedAuthorities())
                 .isAccountNonExpired(true)
@@ -70,9 +75,16 @@ public class UserService implements UserDetailsService {
 
     public UserDto getUser(String username){
         User user = userRepository.findUserByUsername(username).get();
+//        List<String> userAuthorities = user.getAuthorities().stream()
+//                .map( grantedAuthority -> grantedAuthority.toString())
+//                .collect(Collectors.toList());
         return UserDto.builder()
                 .username(user.getUsername())
-                .accesToken("")
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .rank(user.getRank())
+                .tournaments(user.getTournaments())
+//                .authorities(userAuthorities)
                 .build();
     }
 
