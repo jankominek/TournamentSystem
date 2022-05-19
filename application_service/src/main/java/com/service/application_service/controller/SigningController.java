@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RequestMapping()
 @RestController
-@CrossOrigin("localhost:19000")
+@CrossOrigin("localhost:3000")
 public class SigningController {
 
     @Autowired

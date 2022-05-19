@@ -19,6 +19,8 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import java.util.Arrays;
+
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -47,7 +49,8 @@ public class ApplicationServiceSecurityConfig extends WebSecurityConfigurerAdapt
 ////                .antMatchers("/admin/**").hasRole(UserRole.ADMIN.name())
 //                .anyRequest()
 //                .authenticated();
-        http
+        http.cors()
+                .and()
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
@@ -77,10 +80,4 @@ public class ApplicationServiceSecurityConfig extends WebSecurityConfigurerAdapt
         return provider;
     }
 
-//    @Bean
-//    CorsConfigurationSource corsConfigurationSource() {
-//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-//        source.registerCorsConfiguration("/**", new CorsConfiguration().applyPermitDefaultValues());
-//        return source;
-//    }
 }

@@ -22,6 +22,7 @@ public class Tournament {
     private LocalDateTime endDate;
     private Integer maxParticipants;
     private Integer playerNumber;
+    private Integer minRank;
     private List<User> users;
 
 
