@@ -1,5 +1,6 @@
 package com.service.application_service.security;
 
+import com.google.common.collect.ImmutableList;
 import com.service.application_service.jwt.JwtTokenFilter;
 import com.service.application_service.jwt.JwtTokenVeryfication;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,17 +53,18 @@ public class ApplicationServiceSecurityConfig extends WebSecurityConfigurerAdapt
 ////                .antMatchers("/admin/**").hasRole(UserRole.ADMIN.name())
 //                .anyRequest()
 //                .authenticated();
-        http.cors()
-                .and()
+        http
                 .csrf().disable()
+                .cors()
+                .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .addFilter(new JwtTokenFilter(authenticationManagerBean()))
                 .addFilterAfter(new JwtTokenVeryfication(), JwtTokenFilter.class)
                 .authorizeRequests()
                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
-                .antMatchers("/register").permitAll()
-                .anyRequest().authenticated();
+                .antMatchers("/register/**").permitAll()
+                .anyRequest().permitAll();
     }
 
     @Override
@@ -83,16 +85,17 @@ public class ApplicationServiceSecurityConfig extends WebSecurityConfigurerAdapt
         provider.setUserDetailsService(userDetailsService);
         return provider;
     }
-    @Bean
-    CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Collections.singletonList("http://localhost:3000"));
-        configuration.setAllowedMethods(Arrays.asList("GET","POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
-        configuration.setExposedHeaders(Arrays.asList("Authorization", "content-type"));
-        configuration.setAllowedHeaders(Arrays.asList("Authorization", "content-type"));
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
-    }
+//    @Bean
+//    CorsConfigurationSource corsConfigurationSource() {
+//        CorsConfiguration configuration = new CorsConfiguration();
+//        configuration.setAllowedOrigins(Collections.singletonList("http://localhost:3000"));
+//        configuration.setAllowedMethods(Arrays.asList("GET","POST", "PUT", "DELETE"));
+//        configuration.setExposedHeaders(Arrays.asList("Authorization", "content-type"));
+//        configuration.setAllowedHeaders(Arrays.asList("Authorization", "content-type"));
+//        configuration.se
+//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//        source.registerCorsConfiguration("/**", configuration);
+//        return source;
+//    }
 
 }
