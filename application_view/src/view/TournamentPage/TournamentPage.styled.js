@@ -25,6 +25,14 @@ export const TournamentPageTitleContainer = styled.div`
     color: ${colors.white};
     font-weight: bold;
 `
+export const TournamentUserName = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;    
+    margin-right: 2rem;
+    font-size: 20px;
+    color: ${colors.white};
+`
 export const ButtonContainer = styled.div`
     padding: 1rem 2rem;
     display: flex;

@@ -3,7 +3,10 @@ package com.service.application_service.model;
 import com.service.application_service.utils.ConfirmationToken;
 import lombok.Builder;
 import lombok.Data;
+import org.checkerframework.common.aliasing.qual.Unique;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,10 +21,12 @@ public class User implements UserDetails {
 
     @Id
     private String id;
+    @Indexed(unique = true)
     private String username;
     private String firstName;
     private String lastName;
     private String password;
+    @DBRef
     private List<Tournament> tournaments;
     private Integer rank;
     Collection<? extends GrantedAuthority> grantedAuthorities;

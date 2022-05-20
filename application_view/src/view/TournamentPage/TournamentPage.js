@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { Button } from '../../components/Button/Button'
 import { Modal } from '../../components/Modal/Modal'
@@ -6,17 +7,40 @@ import { Search } from '../../components/SearchComponent/Search'
 import { Tournament } from '../../components/Tournament/Tournament'
 import { CreateTournamentModal } from '../../utils/CreateTournamentModal'
 import { colors } from '../../utils/theme'
-import { ButtonContainer, Flex, TournamentButtonContainer, TournamentPageHeader, TournamentPageTitleContainer, TournamentPageWrapper } from './TournamentPage.styled'
+import axios from 'axios';
+import { ButtonContainer, Flex, TournamentButtonContainer, TournamentPageHeader, TournamentPageTitleContainer, TournamentPageWrapper, TournamentUserName } from './TournamentPage.styled'
 
 export const TournamentPage = () => {
 
     const [isTournamenModalShowing, setIsTournamentModalShowing] = useState(false);
+    const [tournaments, setTournaments] = useState();
     const navigate = useNavigate();
+
+    const userState = useSelector( state => state.user);
+
+    useEffect( () => {
+        axios.get(`http://localhost:8079/service/api/tournament/all`)
+            .then( response => {
+                console.log(response.data)
+                setTournaments(response.data);
+            })
+    }, [])
+
+    const tournamentList = tournaments && tournaments.map( (tournament) => (
+        <Tournament   tournamentId={tournament.id}
+                        name={tournament.name}
+                        discipline={tournament.discipline}
+                        organizer={tournament.organizer}
+                        startDate={tournament.startDate}
+                        endDate={tournament.endDate}
+            />
+    ))
+
+   
 
     const onLoginButtonClick = () => navigate("/login");
 
     const onRegisterButtonClick = () => navigate("/register");
-    
 
     const buttonProps = {
         padding : ".5rem 2rem",
@@ -40,7 +64,11 @@ export const TournamentPage = () => {
         setIsTournamentModalShowing(true);
     }
 
-    const onTournamentModalSave = () => {
+    const onTournamentModalSave = (data) => {
+        axios.post("http://localhost:8079/service/api/tournament/create", data)
+            .then(response =>{
+                console.log(response)
+            })
         
     }
     const onTournamentModalClose = () => setIsTournamentModalShowing(false);
@@ -60,6 +88,7 @@ export const TournamentPage = () => {
                     Tournament system
                 </TournamentPageTitleContainer>
                 <ButtonContainer>
+                    {userState && <TournamentUserName>Hello, {userState.firstName + '  ' + userState.lastName}</TournamentUserName>}
                     <Button text="login" onClick={onLoginButtonClick} {...buttonProps}/>
                     <Button text="register" onClick={onRegisterButtonClick} {...buttonProps}/>
                 </ButtonContainer>
@@ -72,12 +101,8 @@ export const TournamentPage = () => {
                     placeholder="search tournament by name.."
             />
 
-            <Tournament name="Example text"
-                        discipline="Programming"
-                        organizer="Jan Kominek"
-                        startDate="02-03-2022"
-                        endDate="02-04-2022"
-            />
+            {tournamentList}
+
             {isTournamenModalShowing && <Modal body={<CreateTournamentModal {...tournamentModalParams}/>}
                                                     width="60rem"
                                                     height="50rem"/>}

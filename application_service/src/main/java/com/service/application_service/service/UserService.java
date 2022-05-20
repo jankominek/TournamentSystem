@@ -9,6 +9,7 @@ import com.service.application_service.security.UserRole;
 import com.service.application_service.utils.ConfirmationToken;
 import com.service.application_service.utils.UserConfirmationToken;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -75,16 +76,17 @@ public class UserService implements UserDetailsService {
 
     public UserDto getUser(String username){
         User user = userRepository.findUserByUsername(username).get();
-//        List<String> userAuthorities = user.getAuthorities().stream()
-//                .map( grantedAuthority -> grantedAuthority.toString())
-//                .collect(Collectors.toList());
+        List<String> userAuthorities = user.getGrantedAuthorities().stream()
+                .map( grantedAuthority -> grantedAuthority.toString())
+                .collect(Collectors.toList());
+
         return UserDto.builder()
                 .username(user.getUsername())
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
                 .rank(user.getRank())
                 .tournaments(user.getTournaments())
-//                .authorities(userAuthorities)
+                .authorities(userAuthorities)
                 .build();
     }
 

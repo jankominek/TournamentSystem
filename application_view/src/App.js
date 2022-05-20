@@ -12,6 +12,7 @@ function App() {
         <Route path="/" element={<TournamentPage />} exact/>
         <Route path="/login" element={<SigningForm isLoginPage={true}/>} exact/>
         <Route path="/register" element={<SigningForm isLoginPage={false}/>} exact/>
+        {/* <Route path="/tournament/:id" element={< />} /> */}
       </Routes>
     </AppWrapper>
   );

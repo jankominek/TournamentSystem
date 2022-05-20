@@ -7,7 +7,8 @@ import { Modal } from '../../components/Modal/Modal';
 import { ConfirmTokenModal } from '../../utils/ConfirmTokenModal';
 import { useDispatch, useSelector } from 'react-redux';
 import { setUserState } from '../../redux/User';
-import setAxiosConfig from '../../utils/axiosConfiguration';
+import { Navigate, useNavigate } from 'react-router-dom';
+import { setAxiosHeaderAuthorization } from '../../utils/axiosConfiguration';
 
 export const SigningForm = (props) => {
 
@@ -17,20 +18,27 @@ export const SigningForm = (props) => {
   const [isModalShowing, setIsModalShowing] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+  const navigate = useNavigate();
+
   const userState = useSelector( state => state.user);
   const dispatch = useDispatch();
   console.log(userState);
-  setAxiosConfig();
+
+  useEffect( () => {
+    // setUserCredentials({});
+  }, [])
+
   useEffect( () => {
     if(isLoggedIn){
-      
+        getUser();
+        navigate("/")
     }
   }, [isLoggedIn])
 
   const getUser = () => {
       axios.get("http://localhost:8079/service/api/user/logged")
         .then( (response) => {
-            console.log("RESPONSE " , response.data)
+            dispatch(setUserState(response.data));
         })
   }
 
@@ -46,9 +54,8 @@ export const SigningForm = (props) => {
     const onLoginClick = () => {
       axios.post("http://localhost:8079/login", userCredentials)
         .then( (response) => {
-          console.log(response)
             if(response.status == 200){
-                // getUser();
+                setAxiosHeaderAuthorization(response.data)
                 setIsLoggedIn(true)
             }
         })
@@ -68,7 +75,7 @@ export const SigningForm = (props) => {
     const onModalSave = (data) => {
       axios.post("http://localhost:8079/register/confirm", data)
         .then( (response) => {
-          console.log(response.data)
+            response.data && navigate("/login");
         })
     }
 
@@ -82,8 +89,8 @@ export const SigningForm = (props) => {
   return (
     <SigningFormWrapper>
         <SigningBox>
-            {!isLoginPage && <Input onChange={onChangeInput} placeholder="first name" name="fname"/>}
-            {!isLoginPage && <Input onChange={onChangeInput} placeholder="last name" name="lname"/>}
+            {!isLoginPage && <Input onChange={onChangeInput} placeholder="first name" name="firstName"/>}
+            {!isLoginPage && <Input onChange={onChangeInput} placeholder="last name" name="lastName"/>}
             <Input onChange={onChangeInput} placeholder="email" name="username"/>
             <Input onChange={onChangeInput} placeholder="password" name="password" type="password"/>
             {isLoginPage ? <Button text="Login" onClick={onLoginClick}/> :
