@@ -39,7 +39,7 @@ export const TournamentDetialsModal = ({tournament, onModalClose, onModalJoin, j
       </Flex>
       <Flex>
         <TournamentDetailsTextKey>Users : </TournamentDetailsTextKey>
-        {/* {tournament?.users && tournament.users.map( (user) => <TournamentDetailsTextValue>{user.firstName}</TournamentDetailsTextValue>)} */}
+        {tournament?.users && tournament.users.map( (user) => <TournamentDetailsTextValue>{user.firstName + " " +user.lastName}</TournamentDetailsTextValue>)}
       </Flex>
       
       <Flex>

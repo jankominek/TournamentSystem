@@ -1,5 +1,6 @@
 package com.service.application_service.model;
 
+import com.service.application_service.DTO.TournamentUserDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -31,7 +32,7 @@ public class Tournament {
     private Integer maxParticipants;
     private Integer playerNumber;
     private Integer minRank;
-    private List<User> users;
+    private List<TournamentUserDto> users;
 
 
 }

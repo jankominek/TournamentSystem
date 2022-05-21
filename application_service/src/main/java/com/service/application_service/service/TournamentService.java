@@ -3,6 +3,7 @@ package com.service.application_service.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.service.application_service.DTO.JoinTournament;
 import com.service.application_service.DTO.TournamentDto;
+import com.service.application_service.DTO.TournamentUserDto;
 import com.service.application_service.model.Tournament;
 import com.service.application_service.model.User;
 import com.service.application_service.repository.TournamentRepository;
@@ -85,8 +86,15 @@ public class TournamentService {
         User user = userRepository.findUserByUsername(joinTournament.getUsername())
                 .orElseThrow( () -> new NoSuchElementException("user does not exists"));
 
-        List<User> tournamentUsers = tournament.getUsers();
-        tournamentUsers.add(user);
+
+        List<TournamentUserDto> tournamentUsers = tournament.getUsers();
+        TournamentUserDto tournamentUserDto = TournamentUserDto.builder()
+                        .firstName(user.getFirstName())
+                                .lastName(user.getLastName())
+                                        .username(user.getUsername())
+                                                .rank(user.getRank())
+                                                        .build();
+        tournamentUsers.add(tournamentUserDto);
         tournament.setUsers(tournamentUsers);
         tournamentRepository.save(tournament);
 
