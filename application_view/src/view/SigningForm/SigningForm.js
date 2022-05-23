@@ -22,7 +22,6 @@ export const SigningForm = (props) => {
 
   const userState = useSelector( state => state.user);
   const dispatch = useDispatch();
-  console.log(userState);
 
   useEffect( () => {
     // setUserCredentials({});
@@ -48,8 +47,6 @@ export const SigningForm = (props) => {
           [e.target.name] : e.target.value
         });
     }
-
-    console.log("state : ", userCredentials)
 
     const onLoginClick = () => {
       axios.post("http://localhost:8079/login", userCredentials)

@@ -4,29 +4,39 @@ import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { colors } from '../../utils/theme';
 import { TournamentDetialsModal } from '../../utils/TournamentDetailsModal/TournamentDetailsModal';
+import { TournamentGameModal } from '../../utils/TournamentGameModal/TournamentGameModal';
+import { Button } from '../Button/Button';
 import { Modal } from '../Modal/Modal';
 import { DateField, DetailsField, Flex, TournamentComponentWrapper, TournamentContentText } from './Tournament.styled'
 
 export const Tournament = (props) => {
 
-  const {name, discipline, organizer, startDate, endDate, tournamentId} = props;
+  const {name, discipline, organizer, startDate, endDate, tournamentId, getAllTournaments, isMyTournamentsPage} = props;
   const [tournament, setTournament] = useState();
   const [isModalShowing, setIsModalShowing] = useState(false);
+  const [isModalPlayTournamentShowing, setIsModalPlayTournamentShowing] = useState(false);
 
   const userState = useSelector(state => state.user);
 
   const navigate = useNavigate();
 
+  const isTournamentFully = false;//!(tournament.users?.length < tournament.maxParticipants);
+
   useEffect( () => {
+    getTournamentById();
+  }, [])
+
+  const getTournamentById = () => {
     axios.get(`http://localhost:8079/service/api/tournament/${tournamentId}`)
       .then(response => {
+        console.log(response.data)
           setTournament(response.data)
       }) 
-  }, [])
-  console.log("TTT: ", tournament)
+  }
 
   const onShowDetailsClick = () => {
       setIsModalShowing(true);
+      getTournamentById();
   };
 
   const onTournamentModalJoin = () => {
@@ -34,15 +44,24 @@ export const Tournament = (props) => {
       tournamentId: tournamentId,
       username: userState.username
     }
-    axios.post("http://localhost:8079/service/api/tournament/join", data)
+    if(!isTournamentFully){
+      axios.post("http://localhost:8079/service/api/tournament/join", data)
       .then( response => {
           if(response.data){
             onTournamentModalClose();
           }
       })
-
+    }
   };
 const onTournamentModalClose = () => setIsModalShowing(false);
+
+const onModalGameSave = () => {
+
+  setIsModalPlayTournamentShowing(false);
+}
+const onModalGameClose = () => {
+    setIsModalPlayTournamentShowing(false);
+}
 
 
   const tournamentModalParams = {
@@ -52,19 +71,38 @@ const onTournamentModalClose = () => setIsModalShowing(false);
     closeButtonTitle : "close"
   }
 
+  const tournamentModalGameParams = {
+    onModalSave : onModalGameSave,
+    onModalClose : onModalGameClose,
+    saveButtonTitle : "save",
+    closeButtonTitle : "close"
+  }
+
+  const onPlayTournament = () => {
+    setIsModalPlayTournamentShowing(true);
+  }; 
+
   return (
     <>
     <TournamentComponentWrapper>
       <DetailsField onClick={onShowDetailsClick}>Show details</DetailsField>
       <TournamentContentText fontSize="35px" weight="bold" color={colors.brownOrange}>{name}</TournamentContentText>
       <TournamentContentText fontSize="20px" >{discipline}</TournamentContentText>
+      {isMyTournamentsPage && tournament?.isReady && <Button text={"play"} onClick={onPlayTournament}
+                                                    background="lightGreen"
+                                                    color={colors.mediumDarkBlue}/>}
       <TournamentContentText fontSize="14px" >Tournament organizator {organizer}</TournamentContentText>
       <DateField>
         <TournamentContentText fontSize="18px" >starting date : {startDate}</TournamentContentText>
         <TournamentContentText fontSize="18px" >ending date : {endDate}</TournamentContentText>
       </DateField>
     </TournamentComponentWrapper>
-    {isModalShowing && <Modal body={<TournamentDetialsModal tournament={tournament} {...tournamentModalParams}/>} width="70rem"/>}
+
+    {isModalShowing && <Modal body={<TournamentDetialsModal tournament={tournament} 
+    isTournamentFully={isTournamentFully} isMyTournamentsPage={isMyTournamentsPage} {...tournamentModalParams}/>} width="70rem"/>}
+
+    {isModalPlayTournamentShowing && <Modal body={<TournamentGameModal 
+    tournament={tournament} {...tournamentModalGameParams}/>} width="70rem"/>}
     </>
   )
 }

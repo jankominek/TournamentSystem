@@ -5,6 +5,7 @@ import com.service.application_service.DTO.JoinTournament;
 import com.service.application_service.DTO.TournamentDto;
 import com.service.application_service.DTO.TournamentUserDto;
 import com.service.application_service.model.Tournament;
+import com.service.application_service.model.TournamentCourse;
 import com.service.application_service.model.User;
 import com.service.application_service.repository.TournamentRepository;
 import com.service.application_service.repository.UserRepository;
@@ -29,6 +30,10 @@ public class TournamentService {
     @Autowired
     UserRepository userRepository;
 
+    public List<Tournament> getAllTournament(){
+        return tournamentRepository.findAll();
+    }
+
     public List<TournamentDto> getAll(){
         List<Tournament> tournament = tournamentRepository.findAll();
 
@@ -48,6 +53,22 @@ public class TournamentService {
         return tournamentDtos;
     }
 
+    public List<Tournament> getUserTournaments(String user){
+        List<Tournament> tournaments = getAllTournament();
+        List<Tournament> userTournaments = tournaments.stream().filter( (tournament) -> {
+            List<TournamentUserDto> t = tournament.getUsers()
+                    .stream().filter( (usr) -> usr.getUsername().equals(user)).collect(Collectors.toList());
+
+            if(t.size() > 0){
+                return true;
+            }
+            return false;
+
+        }).collect(Collectors.toList());
+
+        return userTournaments;
+    }
+
     public Tournament getTournamentById(String id) {
         return tournamentRepository.findTournamentById(id).orElseThrow(
                 () -> new NoSuchElementException("Tournament does not exists")
@@ -59,16 +80,23 @@ public class TournamentService {
         DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         User user = userRepository.findUserByUsername(tournamentDto.getOrganizer()).get();
 
+        TournamentCourse tournamentCourse = new TournamentCourse();
+        tournamentCourse.setTournamentRounds(Collections.emptyList());
+
         Tournament tournamentModel = Tournament.builder()
                 .name(tournamentDto.getName())
                 .discipline(tournamentDto.getDiscipline())
                 .organizer(tournamentDto.getOrganizer())
                 .startDate(LocalDateTime.parse(tournamentDto.getStartDate(), format))
                 .endDate(LocalDateTime.parse(tournamentDto.getEndDate(), format))
+                .isReady(false)
+                .status(false)
                 .maxParticipants(tournamentDto.getMaxParticipants())
                 .playerNumber(tournamentDto.getPlayerNumber())
                 .minRank(tournamentDto.getMinRank())
                 .users(Collections.emptyList())
+                .userTournaments(Collections.emptyList())
+                .tournamentCourse(tournamentCourse)
                 .build();
 
         Tournament savedTournament = tournamentRepository.save(tournamentModel);

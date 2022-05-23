@@ -11,6 +11,17 @@ export const TournamentDetialsTitle = styled.div`
     font-size: 30px;
     border-bottom: 1px solid ${colors.white}
 `
+export const TournamentStatus = styled.div`
+    color: ${props => props.color};
+    font-size:20px;
+`
+export const TitleHeaderFlex = styled.div`
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    height: 3rem;
+`
 export const TournamentDetailsTextKey = styled.div`
     font-size: 20px;
     color: ${colors.brownOrange};

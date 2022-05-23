@@ -3,8 +3,9 @@ import { colors } from "../../utils/theme";
 
 export const TournamentComponentWrapper = styled.div`
     width: 50rem;
-    height: 15rem;
+    min-height: 15rem;
     display: flex;
+    padding-bottom: 1rem;
     flex-direction: column;
     justify-content: center;
     align-items: center;

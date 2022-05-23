@@ -21,6 +21,16 @@ public class TournamentController {
         return tournamentService.getAll();
     }
 
+    @GetMapping("/userTournaments/{user}")
+    public List<Tournament> getUserTournaments(@PathVariable String user){
+        return tournamentService.getUserTournaments(user);
+    }
+
+//    @PostMapping("userTournament/result")
+//    public void saveTournamentResult(@RequestBody ){
+//
+//    }
+
     @PostMapping("/create")
     public void createTournament(@RequestBody TournamentDto tournamentDto){
         tournamentService.createTournament(tournamentDto);

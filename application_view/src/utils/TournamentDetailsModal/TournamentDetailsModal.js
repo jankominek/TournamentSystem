@@ -1,14 +1,20 @@
 import React from 'react'
-import { Flex, TournamentDetailsText, TournamentDetailsTextKey, TournamentDetailsTextValue, TournamentDetialsModalWrapper, TournamentDetialsTitle } from './TournamentDetailsModal.styled'
+import { Flex, TitleHeaderFlex, TournamentDetailsText, TournamentDetailsTextKey, TournamentDetailsTextValue, TournamentDetialsModalWrapper, TournamentDetialsTitle, TournamentStatus } from './TournamentDetailsModal.styled'
 import {Button} from '../../components/Button/Button';
-export const TournamentDetialsModal = ({tournament, onModalClose, onModalJoin, joinButtonTitle, closeButtonTitle}) => {
-
+import { colors } from '../theme';
+export const TournamentDetialsModal = ({tournament, isTournamentFully, onModalClose, 
+  onModalJoin, joinButtonTitle, closeButtonTitle, isMyTournamentsPage}) => {
 
   return (
     <TournamentDetialsModalWrapper>
-      <TournamentDetialsTitle>
-        Tournament: {tournament?.name}
-      </TournamentDetialsTitle>
+      <TitleHeaderFlex>
+        <TournamentDetialsTitle>
+          Tournament: {tournament?.name}
+        </TournamentDetialsTitle>
+        <TournamentStatus color={isTournamentFully ? "red" : "green"}>
+          {isTournamentFully ? "You can not sign up for the tournament" : "You can sign up for the tournament"}
+        </TournamentStatus>
+      </TitleHeaderFlex>
       <Flex>
         <TournamentDetailsTextKey>Organizer : </TournamentDetailsTextKey>
         <TournamentDetailsTextValue>{tournament?.organizer}</TournamentDetailsTextValue>

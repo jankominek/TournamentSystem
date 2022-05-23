@@ -19,12 +19,16 @@ export const TournamentPage = () => {
     const userState = useSelector( state => state.user);
 
     useEffect( () => {
-        axios.get(`http://localhost:8079/service/api/tournament/all`)
-            .then( response => {
-                console.log(response.data)
-                setTournaments(response.data);
-            })
+        getAllTournaments();
     }, [])
+
+    const getAllTournaments = () => {
+        axios.get(`http://localhost:8079/service/api/tournament/all`)
+        .then( response => {
+            console.log("RELOADING ALL TOURNAMENTS")
+            setTournaments(response.data);
+        })
+    }
 
     const tournamentList = tournaments && tournaments.map( (tournament) => (
         <Tournament   tournamentId={tournament.id}
@@ -33,6 +37,7 @@ export const TournamentPage = () => {
                         organizer={tournament.organizer}
                         startDate={tournament.startDate}
                         endDate={tournament.endDate}
+                        getAllTournaments={getAllTournaments}
             />
     ))
 
@@ -67,11 +72,14 @@ export const TournamentPage = () => {
     const onTournamentModalSave = (data) => {
         axios.post("http://localhost:8079/service/api/tournament/create", data)
             .then(response =>{
-                console.log(response)
+                getAllTournaments();
             })
-        
     }
     const onTournamentModalClose = () => setIsTournamentModalShowing(false);
+
+    const onMyTournamentsClick = () => {
+        navigate("/mytournaments");
+    }
 
     const tournamentModalParams = {
         onModalSave : onTournamentModalSave,
@@ -95,7 +103,7 @@ export const TournamentPage = () => {
             </TournamentPageHeader>
             <TournamentButtonContainer>
                 <Button text="create tournament" onClick={createTournament} {...createTournamentButtonProps}/>
-                {/* <Button text="register" onClick={onRegisterButtonClick} {...createTournamentButtonProps}/> */}
+                <Button text="my tournaments" onClick={onMyTournamentsClick} {...createTournamentButtonProps}/>
             </TournamentButtonContainer>
             <Search onSearchChange={onSearchChange}
                     placeholder="search tournament by name.."

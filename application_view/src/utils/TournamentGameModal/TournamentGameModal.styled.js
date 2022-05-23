@@ -1,0 +1,46 @@
+import styled from "styled-components";
+import { colors } from "../theme";
+
+export const TournamentGameWrapper = styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+`
+
+export const TournamentGameTitle = styled.div`
+    font-size: 25px;
+    color: ${colors.white};
+    letter-spacing: 1px;
+    padding: 1rem 3rem;
+    border-bottom: 2px solid ${colors.orange};
+    display: flex;
+    justify-content: center;
+    align-items: center;
+`
+
+export const TournamentGameFlex = styled.div`
+    display: flex;
+`
+
+export const GameField = styled.div`
+    display: flex;
+    margin: 2rem 0rem;
+    justify-content: space-evenly;
+    align-items: center;
+    width: 35rem;
+    height: 15rem;
+    background: ${colors.lightGray};
+    border-radius: 10px;
+`
+
+export const UserGameField = styled.div`
+    width: 40%;
+    height: 12rem;
+    background: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: ${props=> props.background || colors.gray};
+    border-radius: 10px;
+`

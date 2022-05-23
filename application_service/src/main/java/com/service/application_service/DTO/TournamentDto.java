@@ -21,5 +21,4 @@ public class TournamentDto {
     private Integer playerNumber;
     private Integer minRank;
 
-
 }

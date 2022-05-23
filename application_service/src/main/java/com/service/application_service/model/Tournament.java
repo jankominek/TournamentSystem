@@ -29,10 +29,16 @@ public class Tournament {
     private String organizer;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
+    private LocalDateTime deadlineStart;
+    private LocalDateTime deadlineEnd;
+    private Boolean isReady;
+    private Boolean status;
     private Integer maxParticipants;
     private Integer playerNumber;
     private Integer minRank;
     private List<TournamentUserDto> users;
+    private List<UserTournament> userTournaments;
+    private TournamentCourse tournamentCourse;
 
 
 }
