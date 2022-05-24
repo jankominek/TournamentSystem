@@ -30,7 +30,7 @@ export const TournamentGameModal = ({tournament, onModalClose,
 
     const selectCorrectUserTournament = () => {
         const tournamentRound = tournament.tournamentCourse.tournamentRounds.find( (tour) => tour.isRoundEnd == false);
-        setRound(tournamentRound);
+        setRound(tournamentRound.round);
         const usrTournament = tournamentRound.userTournaments.filter( (usrTour) => usrTour.id.includes(userState.username));
         usrTournament && setFirstUser(usrTournament["firstUser"]);
         usrTournament && setSecondUser(usrTournament["secondUser"]);
@@ -56,12 +56,15 @@ export const TournamentGameModal = ({tournament, onModalClose,
         const userKey = getKeyByValue(userTournament, userState.username);
 
         userTournament[userKey+"Result"] = selectedWinner;
+
+        console.log("XXXXXXXXXXXX: ", round)
+        
         
         const tournamentToSave = {
             name: tournament.name,
             round: round,
             userTournament : userTournament,
-            userTypeResult: userKey
+            userTypeResult: userKey+"Result"
         }
         axios.post(`http://localhost:8079/service/api/tournament/userTournament/result`, tournamentToSave)
             .then( (response) => {

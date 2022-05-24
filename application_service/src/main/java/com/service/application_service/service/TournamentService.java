@@ -132,13 +132,17 @@ public class TournamentService {
         Tournament dbTournament = tournamentRepository.findTournamentByName(updatedUserTournament.getName()).orElseThrow(() ->
                 new NoSuchElementException("tournament does not exists"));
 
-       List<Tournament> updatedTournament = dbTournament.getTournamentCourse().getTournamentRounds().get(updatedUserTournament.getRound() - 1)
+//        ObjectMapper objectMapper = new ObjectMapper();
+//        UserTournament userTournament = objectMapper.convertValue(updatedUserTournament.getUserTournament(), UserTournament.class);
+
+        Integer tournamentRound = Integer.parseInt(updatedUserTournament.getRound());
+       List<Tournament> updatedTournament = dbTournament.getTournamentCourse().getTournamentRounds().get(tournamentRound - 1)
                .getUserTournaments().stream().map( (usrTour) -> {
             if(usrTour.getId().equals(updatedUserTournament.getUserTournament().getId())){
-                if(updatedUserTournament.getUserTypeResult() == "firstUserResult"){
+                if(updatedUserTournament.getUserTypeResult().equals("firstUserResult")){
                     usrTour.setFirstUserResult(updatedUserTournament.getUserTournament().getFirstUserResult());
                 }
-                if(updatedUserTournament.getUserTypeResult() == "secondUserResult"){
+                if(updatedUserTournament.getUserTypeResult().equals("secondUserResult")){
                     usrTour.setSecondUserResult(updatedUserTournament.getUserTournament().getSecondUserResult());
                 }
 
@@ -146,9 +150,12 @@ public class TournamentService {
                     return dbTournament;
                 }else{
                     if(usrTour.getFirstUserResult().equals(usrTour.getSecondUserResult())){
+                        usrTour.setIsResultCorrect(true);
                         return dbTournament;
                     }else{
-                        return null;
+                        usrTour.setFirstUserResult("");
+                        usrTour.setSecondUserResult("");
+                        return dbTournament;
                     }
                 }
             }

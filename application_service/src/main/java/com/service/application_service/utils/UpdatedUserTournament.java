@@ -8,7 +8,7 @@ import lombok.Data;
 @Builder
 public class UpdatedUserTournament {
     private String name;
-    private Integer round;
+    private String round;
     private UserTournament userTournament;
     private String userTypeResult;
 }
