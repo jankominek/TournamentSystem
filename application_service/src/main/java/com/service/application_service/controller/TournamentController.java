@@ -4,6 +4,7 @@ import com.service.application_service.DTO.JoinTournament;
 import com.service.application_service.DTO.TournamentDto;
 import com.service.application_service.model.Tournament;
 import com.service.application_service.service.TournamentService;
+import com.service.application_service.utils.UpdatedUserTournament;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,10 +27,10 @@ public class TournamentController {
         return tournamentService.getUserTournaments(user);
     }
 
-//    @PostMapping("userTournament/result")
-//    public void saveTournamentResult(@RequestBody ){
-//
-//    }
+    @PostMapping("/userTournament/result")
+    public Boolean saveTournamentResult(@RequestBody UpdatedUserTournament updatedUserTournament){
+        return tournamentService.saveTournamentResult(updatedUserTournament);
+    }
 
     @PostMapping("/create")
     public void createTournament(@RequestBody TournamentDto tournamentDto){

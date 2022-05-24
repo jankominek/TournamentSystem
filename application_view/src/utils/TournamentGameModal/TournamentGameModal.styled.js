@@ -37,10 +37,10 @@ export const GameField = styled.div`
 export const UserGameField = styled.div`
     width: 40%;
     height: 12rem;
-    background: white;
     display: flex;
     justify-content: center;
     align-items: center;
-    background: ${props=> props.background || colors.gray};
+    border: 5px solid ${props=> props.borderColor || colors.white};
+    background: ${props=> props.background || colors.white};
     border-radius: 10px;
 `

@@ -72,8 +72,9 @@ public class TournamentScheduler {
            List<TournamentUserDto> tournamentUserDtoList = tournament.getUsers().subList(i, i+2);
 
            UserTournament userTournament = UserTournament.builder()
-                   .firstUser(tournamentUserDtoList.get(0).getFirstName())
-                   .secondUser(tournamentUserDtoList.get(1).getFirstName())
+                   .id(tournamentUserDtoList.get(0).getUsername() + tournamentUserDtoList.get(1).getUsername())
+                   .firstUser(tournamentUserDtoList.get(0).getUsername())
+                   .secondUser(tournamentUserDtoList.get(1).getUsername())
                    .firstUserResult("")
                    .secondUserResult("")
                    .isResultCorrect(false)

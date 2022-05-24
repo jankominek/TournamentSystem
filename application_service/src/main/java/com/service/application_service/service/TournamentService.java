@@ -7,8 +7,10 @@ import com.service.application_service.DTO.TournamentUserDto;
 import com.service.application_service.model.Tournament;
 import com.service.application_service.model.TournamentCourse;
 import com.service.application_service.model.User;
+import com.service.application_service.model.UserTournament;
 import com.service.application_service.repository.TournamentRepository;
 import com.service.application_service.repository.UserRepository;
+import com.service.application_service.utils.UpdatedUserTournament;
 import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -128,5 +130,28 @@ public class TournamentService {
 
         return true;
     }
+
+    public Boolean saveTournamentResult(UpdatedUserTournament updatedUserTournament){
+        Tournament dbTournament = tournamentRepository.findTournamentByName(updatedUserTournament.getName()).orElseThrow(() ->
+                new NoSuchElementException("tournament does not exists"));n
+//
+//        UserTournament userTournament = dbTournament.getTournamentCourse().getTournamentRounds().stream().forEach( (usrTour) -> {
+//            if(usrTour.getRound().equals(round)) {
+//               usrTour.getUserTournaments().forEach( (userTournamentDb) -> {
+//                   if(userTournamentDb.getId().equals(id)){
+//                       if(userTournamentDb.getFirstUserResult().equals("") && userTournamentDb.getSecondUserResult().equals("")){
+//                           tournamentRepository.save(tournament);
+//                       }else{
+//
+//                       }
+//                   }
+//               });
+//            }
+//            return false;
+//        });
+
+        return true;
+    };
+
 
 }

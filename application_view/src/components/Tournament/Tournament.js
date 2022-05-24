@@ -55,7 +55,7 @@ export const Tournament = (props) => {
   };
 const onTournamentModalClose = () => setIsModalShowing(false);
 
-const onModalGameSave = () => {
+const onModalGameSave = (selectedUser) => {
 
   setIsModalPlayTournamentShowing(false);
 }
@@ -102,7 +102,7 @@ const onModalGameClose = () => {
     isTournamentFully={isTournamentFully} isMyTournamentsPage={isMyTournamentsPage} {...tournamentModalParams}/>} width="70rem"/>}
 
     {isModalPlayTournamentShowing && <Modal body={<TournamentGameModal 
-    tournament={tournament} {...tournamentModalGameParams}/>} width="70rem"/>}
+    tournament={tournament} {...tournamentModalGameParams}/>} width="70rem" height="35rem"/>}
     </>
   )
 }
