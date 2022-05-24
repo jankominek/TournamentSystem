@@ -37,7 +37,7 @@ public class TournamentScheduler {
         tournaments.stream().forEach( (tournament) -> {
             System.out.println("tournament time : " + tournament.getStartDate());
             Boolean isParticipantsFull = tournament.getUsers().size() == tournament.getMaxParticipants();
-            if(tournament.getStartDate().isAfter(currentTime) && !tournament.getIsReady() && isParticipantsFull){
+            if(tournament.getStartDate().isBefore(currentTime) && !tournament.getIsReady() && isParticipantsFull){
                 List<UserTournament> ut = organizeTournamentForUsers(tournament);
                 TournamentCourse tournamentCourse = organizeLadder(ut);
                 System.out.println(" -----------> shadeuler working");

@@ -9,5 +9,6 @@ import lombok.Data;
 public class UpdatedUserTournament {
     private String name;
     private Integer round;
-    UserTournament userTournament;
+    private UserTournament userTournament;
+    private String userTypeResult;
 }
