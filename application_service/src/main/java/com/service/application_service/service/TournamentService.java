@@ -128,45 +128,71 @@ public class TournamentService {
         return true;
     }
 
+    public void checkIfTournamentRoundEnd(Tournament tournament, Integer tournamentRound){
+
+        List<UserTournament> userTournaments = tournament.getTournamentCourse().getTournamentRounds()
+                .get(tournamentRound - 1).getUserTournaments();
+
+        Integer userToursSize = userTournaments.size();
+        Integer endedTours = 0;
+
+        for( UserTournament ut : userTournaments){
+            if(ut.getIsResultCorrect()){
+                endedTours++;
+            }
+        }
+
+        if(endedTours.equals(userToursSize)){
+            tournament.getTournamentCourse().getTournamentRounds().get(tournamentRound - 1).setIsRoundEnd(true);
+            tournamentRepository.save(tournament);
+        }
+
+    }
     public Boolean saveTournamentResult(UpdatedUserTournament updatedUserTournament){
         Tournament dbTournament = tournamentRepository.findTournamentByName(updatedUserTournament.getName()).orElseThrow(() ->
                 new NoSuchElementException("tournament does not exists"));
 
-//        ObjectMapper objectMapper = new ObjectMapper();
-//        UserTournament userTournament = objectMapper.convertValue(updatedUserTournament.getUserTournament(), UserTournament.class);
-
         Integer tournamentRound = Integer.parseInt(updatedUserTournament.getRound());
-       List<Tournament> updatedTournament = dbTournament.getTournamentCourse().getTournamentRounds().get(tournamentRound - 1)
-               .getUserTournaments().stream().map( (usrTour) -> {
-            if(usrTour.getId().equals(updatedUserTournament.getUserTournament().getId())){
-                if(updatedUserTournament.getUserTypeResult().equals("firstUserResult")){
-                    usrTour.setFirstUserResult(updatedUserTournament.getUserTournament().getFirstUserResult());
-                }
-                if(updatedUserTournament.getUserTypeResult().equals("secondUserResult")){
-                    usrTour.setSecondUserResult(updatedUserTournament.getUserTournament().getSecondUserResult());
-                }
+        UserTournament userTournament = dbTournament.getTournamentCourse().getTournamentRounds().get(tournamentRound - 1)
+                .getUserTournaments().stream().filter((tournament) -> tournament.getId().equals(updatedUserTournament.getUserTournament().getId())
+                ).collect(Collectors.toList()).get(0);
 
-                if(usrTour.getFirstUserResult().equals("") || usrTour.getSecondUserResult().equals("")) {
-                    return dbTournament;
-                }else{
-                    if(usrTour.getFirstUserResult().equals(usrTour.getSecondUserResult())){
-                        usrTour.setIsResultCorrect(true);
-                        return dbTournament;
-                    }else{
-                        usrTour.setFirstUserResult("");
-                        usrTour.setSecondUserResult("");
-                        return dbTournament;
-                    }
-                }
+
+        if(!userTournament.getIsResultCorrect()){
+            List<Tournament> updatedTournament = dbTournament.getTournamentCourse().getTournamentRounds().get(tournamentRound - 1)
+                    .getUserTournaments().stream().map( (usrTour) -> {
+                        if(usrTour.getId().equals(updatedUserTournament.getUserTournament().getId())){
+                            if(updatedUserTournament.getUserTypeResult().equals("firstUserResult")){
+                                usrTour.setFirstUserResult(updatedUserTournament.getUserTournament().getFirstUserResult());
+                            }
+                            if(updatedUserTournament.getUserTypeResult().equals("secondUserResult")){
+                                usrTour.setSecondUserResult(updatedUserTournament.getUserTournament().getSecondUserResult());
+                            }
+
+                            if(usrTour.getFirstUserResult().equals("") || usrTour.getSecondUserResult().equals("")) {
+                                return dbTournament;
+                            }else{
+                                if(usrTour.getFirstUserResult().equals(usrTour.getSecondUserResult())){
+                                    usrTour.setIsResultCorrect(true);
+                                    return dbTournament;
+                                }else{
+                                    usrTour.setFirstUserResult("");
+                                    usrTour.setSecondUserResult("");
+                                    return dbTournament;
+                                }
+                            }
+                        }
+                        return null;
+                    }).collect(Collectors.toList());
+            updatedTournament.removeAll(Collections.singleton(null));
+            if(updatedTournament.size() != 0){
+                tournamentRepository.save(updatedTournament.get(0));
+            }else {
+                return false;
             }
-            return null;
-        }).collect(Collectors.toList());
+        }
 
-       if(updatedTournament.size() != 0){
-           tournamentRepository.save(updatedTournament.get(0));
-       }else {
-            return false;
-       }
+        checkIfTournamentRoundEnd(dbTournament, tournamentRound);
 
         return true;
     };

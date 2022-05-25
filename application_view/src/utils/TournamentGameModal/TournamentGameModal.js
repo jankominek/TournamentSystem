@@ -57,15 +57,15 @@ export const TournamentGameModal = ({tournament, onModalClose,
 
         userTournament[userKey+"Result"] = selectedWinner;
 
-        console.log("XXXXXXXXXXXX: ", round)
-        
-        
         const tournamentToSave = {
             name: tournament.name,
             round: round,
             userTournament : userTournament,
             userTypeResult: userKey+"Result"
         }
+        console.log("XXXXXXXXXXXX: ", tournamentToSave)
+
+        
         axios.post(`http://localhost:8079/service/api/tournament/userTournament/result`, tournamentToSave)
             .then( (response) => {
                 if(response.data == 1){

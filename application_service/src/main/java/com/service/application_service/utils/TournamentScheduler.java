@@ -142,14 +142,14 @@ public class TournamentScheduler {
     }
 
     public Integer getTournamentRoundCount(Integer userTournamentCount){
-        int selectedPower = 0;
-        for(int i=1; i<= 32; i++){
-            if((2^i) == userTournamentCount.intValue()*2){
+        double selectedPower = 0;
+        for(double i=1; i<= 32; i++){
+            if(Math.pow(2.0, i) == (userTournamentCount.doubleValue()*2.0)){
                 selectedPower = i;
                 break;
             }
         }
         System.out.println("selected power : " + selectedPower);
-        return selectedPower;
+        return Double.valueOf(selectedPower).intValue();
     }
 }
