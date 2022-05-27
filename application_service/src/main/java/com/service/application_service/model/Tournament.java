@@ -36,6 +36,7 @@ public class Tournament {
     private Integer maxParticipants;
     private Integer playerNumber;
     private Integer minRank;
+    private String tournamentWinner;
     private List<TournamentUserDto> users;
     private List<UserTournament> userTournaments;
     private TournamentCourse tournamentCourse;

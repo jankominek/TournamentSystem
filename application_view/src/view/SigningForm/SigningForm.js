@@ -9,6 +9,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setUserState } from '../../redux/User';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { setAxiosHeaderAuthorization } from '../../utils/axiosConfiguration';
+import { setTournaments } from '../../redux/Tournaments';
+
 
 export const SigningForm = (props) => {
 
@@ -23,9 +25,17 @@ export const SigningForm = (props) => {
   const userState = useSelector( state => state.user);
   const dispatch = useDispatch();
 
+  console.log(userCredentials)
+
   useEffect( () => {
-    // setUserCredentials({});
+    if(isLoginPage){
+      // reload();
+    }
   }, [])
+
+  const reload = () => {
+    window.location.reload(true);
+  }
 
   useEffect( () => {
     if(isLoggedIn){
@@ -73,6 +83,7 @@ export const SigningForm = (props) => {
       axios.post("http://localhost:8079/register/confirm", data)
         .then( (response) => {
             response.data && navigate("/login");
+            reload();
         })
     }
 
@@ -87,8 +98,8 @@ export const SigningForm = (props) => {
     <SigningFormWrapper>
         <SigningBox>
             {!isLoginPage && <Input onChange={onChangeInput} placeholder="first name" name="firstName"/>}
-            {!isLoginPage && <Input onChange={onChangeInput} placeholder="last name" name="lastName"/>}
-            <Input onChange={onChangeInput} placeholder="email" name="username"/>
+            {!isLoginPage && <Input onChange={onChangeInput} placeholder="last name" name="lastName" />}
+            <Input onChange={onChangeInput} placeholder="email" name="username" />
             <Input onChange={onChangeInput} placeholder="password" name="password" type="password"/>
             {isLoginPage ? <Button text="Login" onClick={onLoginClick}/> :
                                             <Button text="Register" onClick={onRegisterClick}/>}

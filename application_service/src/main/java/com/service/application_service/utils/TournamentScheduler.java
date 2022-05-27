@@ -28,7 +28,7 @@ public class TournamentScheduler {
     @Autowired
     TournamentService tournamentService;
 
-    @Scheduled(fixedDelay = 10000)
+    @Scheduled(fixedDelay = 3000)
     public void updateTournamentData(){
         System.out.println("scheduler");
         LocalDateTime currentTime = LocalDateTime.now();
@@ -50,13 +50,19 @@ public class TournamentScheduler {
                 tournament.getTournamentCourse().getTournamentRounds().stream().forEach( (tournamentRound) ->{
                     if(tournamentRound.getIsRoundEnd()){
                         if(tournamentRound.getRound().equals(tournament.getTournamentCourse().getTournamentRounds().size())){
+                            String winner = tournamentRound.getUserTournaments().get(0).getFirstUserResult();
                             tournament.setStatus(true);
+                            tournament.setTournamentWinner(winner);
                             tournamentRepository.save(tournament);
                         }
                         else{
-                            TournamentCourse updatedTournamentCourse = prepareNextTournamentRound(tournamentRound.getRound(), tournament.getTournamentCourse());
-                            tournament.setTournamentCourse(updatedTournamentCourse);
-                            tournamentRepository.save(tournament);
+                            TournamentRound nextTournamentRound = tournament.getTournamentCourse().getTournamentRounds().get(tournamentRound.getRound());
+                            if(!nextTournamentRound.getIsRoundReady()) {
+                                TournamentCourse updatedTournamentCourse = prepareNextTournamentRound(tournamentRound.getRound(), tournament.getTournamentCourse());
+                                tournament.setTournamentCourse(updatedTournamentCourse);
+                                tournamentRepository.save(tournament);
+                            }
+
                         }
                     }
                 });
@@ -96,6 +102,7 @@ public class TournamentScheduler {
 
         for(int i=0; i< wonUsers.size(); i+=2){
             UserTournament userTournament = UserTournament.builder()
+                    .id(wonUsers.get(i) + wonUsers.get(i+1))
                     .firstUser(wonUsers.get(i))
                     .secondUser(wonUsers.get(i+1))
                     .firstUserResult("")
@@ -105,6 +112,7 @@ public class TournamentScheduler {
             newUserTournaments.add(userTournament);
         }
 
+        tournamentCourse.getTournamentRounds().get(currentRound).setIsRoundReady(true);
         tournamentCourse.getTournamentRounds().get(currentRound).setUserTournaments(newUserTournaments);
 
         return tournamentCourse;
@@ -121,6 +129,7 @@ public class TournamentScheduler {
             if(i==1){
                 TournamentRound tournamentRound = TournamentRound.builder()
                         .isRoundEnd(false)
+                        .isRoundReady(true)
                         .round(i)
                         .userTournaments(userTournaments)
                         .build();
@@ -128,6 +137,7 @@ public class TournamentScheduler {
             }else {
                 TournamentRound tournamentRound = TournamentRound.builder()
                         .isRoundEnd(false)
+                        .isRoundReady(false)
                         .round(i)
                         .userTournaments(Collections.emptyList())
                         .build();

@@ -7,7 +7,7 @@ import { TournamentDetialsModal } from '../../utils/TournamentDetailsModal/Tourn
 import { TournamentGameModal } from '../../utils/TournamentGameModal/TournamentGameModal';
 import { Button } from '../Button/Button';
 import { Modal } from '../Modal/Modal';
-import { DateField, DetailsField, Flex, TournamentComponentWrapper, TournamentContentText } from './Tournament.styled'
+import { DateField, DetailsField, Flex, TournamentComponentWrapper, TournamentContentText, UserWinnerField, UserWinnerName, UserWinnerTextTitle } from './Tournament.styled'
 
 export const Tournament = (props) => {
 
@@ -20,7 +20,9 @@ export const Tournament = (props) => {
 
   const navigate = useNavigate();
 
-  const isTournamentFully = false;//!(tournament.users?.length < tournament.maxParticipants);
+  const isTournamentFully = !(tournament?.users?.length < tournament?.maxParticipants);
+
+  console.log("TOURNAMENT : ", tournament)
 
   useEffect( () => {
     getTournamentById();
@@ -88,7 +90,13 @@ const onModalGameClose = () => {
       <DetailsField onClick={onShowDetailsClick}>Show details</DetailsField>
       <TournamentContentText fontSize="35px" weight="bold" color={colors.brownOrange}>{name}</TournamentContentText>
       <TournamentContentText fontSize="20px" >{discipline}</TournamentContentText>
-      {isMyTournamentsPage && tournament?.isReady && <Button text={"play"} onClick={onPlayTournament}
+      {tournament?.status && 
+        <UserWinnerField>
+          <UserWinnerTextTitle>Winner of tournament</UserWinnerTextTitle>
+          <UserWinnerName>{tournament.tournamentWinner}</UserWinnerName>
+        </UserWinnerField>
+      }
+      {isMyTournamentsPage && tournament?.isReady && !tournament?.status && <Button text={"play"} onClick={onPlayTournament}
                                                     background="lightGreen"
                                                     color={colors.mediumDarkBlue}/>}
       <TournamentContentText fontSize="14px" >Tournament organizator {organizer}</TournamentContentText>
@@ -100,7 +108,7 @@ const onModalGameClose = () => {
 
     {isModalShowing && <Modal body={<TournamentDetialsModal tournament={tournament} 
     isTournamentFully={isTournamentFully} isMyTournamentsPage={isMyTournamentsPage} {...tournamentModalParams}/>} width="70rem"/>}
-
+    
     {isModalPlayTournamentShowing && <Modal body={<TournamentGameModal 
     tournament={tournament} {...tournamentModalGameParams}/>} width="70rem" height="35rem"/>}
     </>

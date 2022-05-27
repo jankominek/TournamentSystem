@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { InputWrapper } from './Input.styled'
 
 export const Input = (props) => {
-    const {onChange, placeholder, name, type} = props;
+    const {onChange, placeholder, name, type, value, disabled} = props;
 
     const onChangeInput = (e) => {
             
@@ -14,6 +14,8 @@ export const Input = (props) => {
                     name={name || ""}
                     autoComplete="off"
                     type={type || "text"}
+                    value={value}
+                    disabled={disabled}
                     />
   )
 }

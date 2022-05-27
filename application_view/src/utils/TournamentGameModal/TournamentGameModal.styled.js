@@ -44,3 +44,22 @@ export const UserGameField = styled.div`
     background: ${props=> props.background || colors.white};
     border-radius: 10px;
 `
+
+export const UserWinnerField = styled.div`
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+`
+export const UserWinnerTextTitle = styled.div`
+    font-size: 30px;
+    padding: 1rem 2rem;
+    font-weight: bold;
+    color: ${colors.mediumDarkBlue};
+`
+export const UserWinnerName = styled(UserWinnerTextTitle)`
+    font-weight: normal;
+    font-size: 20px;
+`

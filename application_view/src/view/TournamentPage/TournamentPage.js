@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { Button } from '../../components/Button/Button'
 import { Modal } from '../../components/Modal/Modal'
@@ -9,15 +9,19 @@ import { CreateTournamentModal } from '../../utils/CreateTournamentModal'
 import { colors } from '../../utils/theme'
 import axios from 'axios';
 import { ButtonContainer, Flex, TournamentButtonContainer, TournamentPageHeader, TournamentPageTitleContainer, TournamentPageWrapper, TournamentUserName } from './TournamentPage.styled'
+import { setTournamentState } from '../../redux/Tournaments'
+import { createTournamentValidator, dateValidation, numberValidation, textValidation } from '../../utils/validators/createTournamentValidator'
 
 export const TournamentPage = () => {
 
     const [isTournamenModalShowing, setIsTournamentModalShowing] = useState(false);
-    const [tournaments, setTournaments] = useState();
+    const [tournaments, setTournaments] = useState([]);
     const navigate = useNavigate();
 
     const userState = useSelector( state => state.user);
+    const dispatch = useDispatch();
 
+    console.log("!!!!!!!!!", dateValidation("2022-05-03 15:00"));
     useEffect( () => {
         getAllTournaments();
     }, [])
@@ -26,7 +30,9 @@ export const TournamentPage = () => {
         axios.get(`http://localhost:8079/service/api/tournament/all`)
         .then( response => {
             console.log("RELOADING ALL TOURNAMENTS")
+            console.log("XXXX : ", response.data)
             setTournaments(response.data);
+            dispatch(setTournamentState(response.data))
         })
     }
 
@@ -61,19 +67,24 @@ export const TournamentPage = () => {
         fontSize: "18px"
     }
 
-    const onSearchChange = () => {
-
+    const onSearchChange = (data) => {
+        console.log("returned data : ",data)
+        setTournaments(data);
     }
 
     const createTournament = () => {
         setIsTournamentModalShowing(true);
     }
 
-    const onTournamentModalSave = (data) => {
-        axios.post("http://localhost:8079/service/api/tournament/create", data)
-            .then(response =>{
-                getAllTournaments();
-            })
+    const onTournamentModalSave = (data, validation) => {
+        if(validation){
+            onTournamentModalClose();
+            axios.post("http://localhost:8079/service/api/tournament/create", data)
+                        .then(response =>{
+                            getAllTournaments();
+                        })
+        }
+        
     }
     const onTournamentModalClose = () => setIsTournamentModalShowing(false);
 
@@ -96,15 +107,15 @@ export const TournamentPage = () => {
                     Tournament system
                 </TournamentPageTitleContainer>
                 <ButtonContainer>
-                    {userState && <TournamentUserName>Hello, {userState.firstName + '  ' + userState.lastName}</TournamentUserName>}
+                    {userState.username && <TournamentUserName>Hello, {userState.firstName + '  ' + userState.lastName}</TournamentUserName>}
                     <Button text="login" onClick={onLoginButtonClick} {...buttonProps}/>
                     <Button text="register" onClick={onRegisterButtonClick} {...buttonProps}/>
                 </ButtonContainer>
             </TournamentPageHeader>
-            <TournamentButtonContainer>
+            {userState.username && <TournamentButtonContainer>
                 <Button text="create tournament" onClick={createTournament} {...createTournamentButtonProps}/>
                 <Button text="my tournaments" onClick={onMyTournamentsClick} {...createTournamentButtonProps}/>
-            </TournamentButtonContainer>
+            </TournamentButtonContainer>}
             <Search onSearchChange={onSearchChange}
                     placeholder="search tournament by name.."
             />

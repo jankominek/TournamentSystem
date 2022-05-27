@@ -1,11 +1,23 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import { useSelector } from 'react-redux'
 import { Button } from '../components/Button/Button'
 import { Input } from '../components/Input/Input'
-import { ModalFlex, ModalTitle, ModalWrapper } from './ModalWrapper'
+import { ErrorMessage, ModalFlex, ModalTitle, ModalWrapper } from './ModalWrapper'
+import { createTournamentValidator } from './validators/createTournamentValidator'
 
 export const CreateTournamentModal = ({onModalClose, onModalSave, saveButtonTitle, closeButtonTitle}) => {
 
     const [modalData, setModalData] = useState();
+    const [errorMessage , setErrorMessage] = useState("");
+
+    const userState = useSelector( state => state.user);
+
+    useEffect( () => {
+      setModalData({
+        ...modalData,
+        organizer : userState.username
+      })
+    }, [])
 
     const onModalInputChange = (e) => {
         setModalData({
@@ -14,10 +26,44 @@ export const CreateTournamentModal = ({onModalClose, onModalSave, saveButtonTitl
         })
       }
 
+      console.log("modal data : ", modalData)
 
     const onSave = () => {
-        onModalSave(modalData);
-        onClose();
+      const types = [
+        {
+            name: "name",
+            type:"text"
+        },
+        {
+            name: "discipline",
+            type:"text"
+        },
+        {
+            name: "organizator",
+            type:"text"
+        },
+        {
+            name: "startDate",
+            type:"date"
+        },
+        {
+            name: "endDate",
+            type:"date"
+        },
+        {
+            name: "maxParticipants",
+            type:"number"
+        },
+        {
+            name: "minRank",
+            type:"number"
+        },
+    ]
+    const validationResult = createTournamentValidator(modalData, types)
+    setErrorMessage(validationResult);
+        if(!validationResult){
+            onModalSave(modalData, !validationResult);
+        }
       }
   
       const onClose = () => onModalClose();
@@ -28,15 +74,16 @@ export const CreateTournamentModal = ({onModalClose, onModalSave, saveButtonTitl
         <ModalTitle>Create tournament</ModalTitle>
         <Input onChange={onModalInputChange} placeholder="name" name="name" />
         <Input onChange={onModalInputChange} placeholder="discipline" name="discipline" />
-        <Input onChange={onModalInputChange} placeholder="organizer" name="organizer" />
-        <Input onChange={onModalInputChange} placeholder="start date" name="startDate" />
-        <Input onChange={onModalInputChange} placeholder="end date" name="endDate" />
+        <Input onChange={onModalInputChange} placeholder="organizer" name="organizer" value={userState.username} disabled/>
+        <Input onChange={onModalInputChange} placeholder="start date YYYY-MM-DD HH:MM" name="startDate" />
+        <Input onChange={onModalInputChange} placeholder="end date YYYY-MM-DD HH:MM" name="endDate" />
         <Input onChange={onModalInputChange} placeholder="max of participants" name="maxParticipants" />
         <Input onChange={onModalInputChange} placeholder="min rank" name="minRank" />
         <ModalFlex>
             <Button text={saveButtonTitle} onClick={onSave}/>
             <Button text={closeButtonTitle} onClick={onClose}/>
         </ModalFlex>
+        {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
     </ModalWrapper>
     
   )

@@ -7,10 +7,17 @@ import { BrowserRouter } from "react-router-dom";
 import {configureStore}  from '@reduxjs/toolkit';
 import {Provider} from 'react-redux';
 import userReducer from './redux/User';
+import tournamentReducer from './redux/Tournaments';
+import {combineReducers} from 'redux';
 
+// const rootReducer = combineReducers({
+//     user : userReducer,
+//     tournaments : tournamentReducer
+// })
 const store = configureStore({
   reducer:{
-    user : userReducer
+    user: userReducer,
+    tournaments : tournamentReducer
   }
 })
 

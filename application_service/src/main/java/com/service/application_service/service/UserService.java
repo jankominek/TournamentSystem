@@ -2,6 +2,8 @@ package com.service.application_service.service;
 
 import com.service.application_service.DTO.RegistrationUserDto;
 import com.service.application_service.DTO.UserDto;
+import com.service.application_service.EmailSender.EmailSender;
+import com.service.application_service.EmailSender.EmailSenderService;
 import com.service.application_service.model.User;
 import com.service.application_service.repository.UserRepository;
 import com.service.application_service.security.PasswordConfig;
@@ -31,6 +33,8 @@ public class UserService implements UserDetailsService {
     UserRepository userRepository;
     @Autowired
     PasswordConfig passwordConfig;
+    @Autowired
+    EmailSenderService emailSenderService;
 
 
     public List<User> getAllUsers(){
@@ -69,6 +73,8 @@ public class UserService implements UserDetailsService {
                 .build();
 
         userRepository.save(user);
+
+        emailSenderService.send(user.getUsername(), emailSenderService.emailTemplate(user.getUserConfirmationToken().getToken()));
 
         return true;
     }

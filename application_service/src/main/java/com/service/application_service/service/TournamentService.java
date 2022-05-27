@@ -96,6 +96,7 @@ public class TournamentService {
                 .users(Collections.emptyList())
                 .userTournaments(Collections.emptyList())
                 .tournamentCourse(tournamentCourse)
+                .tournamentWinner("")
                 .build();
 
         Tournament savedTournament = tournamentRepository.save(tournamentModel);

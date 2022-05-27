@@ -20,9 +20,6 @@ export const userSlice = createSlice({
                 state[key] = value;
             })
         },
-        uploadUserState: () => {
-
-        }
     }
 })
 export const {setUserState} = userSlice.actions;

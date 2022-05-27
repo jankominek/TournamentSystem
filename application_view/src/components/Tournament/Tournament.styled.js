@@ -42,3 +42,20 @@ export const DateField = styled(Flex)`
     background: ${colors.mediumGray};
     border-radius: 10px;
 `
+export const UserWinnerField = styled.div`
+    padding: .5rem 0rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+`
+export const UserWinnerTextTitle = styled.div`
+    font-size: 25px;
+    padding: .5rem 2rem;
+    font-weight: bold;
+    color: ${colors.brownOrange};
+`
+export const UserWinnerName = styled(UserWinnerTextTitle)`
+    font-weight: normal;
+    font-size: 20px;
+`

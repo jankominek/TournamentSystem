@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux';
 import { Button } from '../../components/Button/Button'
 import { colors } from '../theme';
-import { GameField, TournamentGameFlex, TournamentGameTitle, TournamentGameWrapper, UserGameField } from './TournamentGameModal.styled'
+import { GameField, TournamentGameFlex, TournamentGameTitle, TournamentGameWrapper, UserGameField, UserWinnerField, UserWinnerName, UserWinnerTextTitle } from './TournamentGameModal.styled'
 
 export const TournamentGameModal = ({tournament, onModalClose, 
     onModalSave, saveButtonTitle, closeButtonTitle}) => {
@@ -13,6 +13,7 @@ export const TournamentGameModal = ({tournament, onModalClose,
     const [firstUser, setFirstUser] = useState();
     const [secondUser, setSecondUser] = useState();
     const [round, setRound] = useState();
+    const [tournamentWinner, setTournamentWinner] = useState();
     
     console.log("tournament modal game: ", tournament);
 
@@ -29,12 +30,17 @@ export const TournamentGameModal = ({tournament, onModalClose,
     console.log("userTournament : ", userTournament)
 
     const selectCorrectUserTournament = () => {
-        const tournamentRound = tournament.tournamentCourse.tournamentRounds.find( (tour) => tour.isRoundEnd == false);
-        setRound(tournamentRound.round);
-        const usrTournament = tournamentRound.userTournaments.filter( (usrTour) => usrTour.id.includes(userState.username));
-        usrTournament && setFirstUser(usrTournament["firstUser"]);
-        usrTournament && setSecondUser(usrTournament["secondUser"]);
-        setUserTournament(usrTournament[0]);
+        if(!tournament.status){
+            const tournamentRound = tournament.tournamentCourse.tournamentRounds.find( (tour) => tour.isRoundEnd == false);
+            setRound(tournamentRound?.round);
+            const usrTournament = tournamentRound?.userTournaments.filter( (usrTour) => usrTour.id.includes(userState.username));
+            usrTournament && setFirstUser(usrTournament["firstUser"]);
+            usrTournament && setSecondUser(usrTournament["secondUser"]);
+            setUserTournament(usrTournament?.[0]);
+        }else{
+            setTournamentWinner(tournament.tournamentWinner)
+        }
+        
     }
 
     const setUsers = () => {
@@ -78,7 +84,7 @@ export const TournamentGameModal = ({tournament, onModalClose,
       console.log("want to save");
         saveGameResult();
     }
-
+    console.log("user winner : ", tournamentWinner)
     const dataIsLoaded = firstUser && secondUser;
   return (
     <TournamentGameWrapper>
@@ -86,20 +92,27 @@ export const TournamentGameModal = ({tournament, onModalClose,
          Select winner of the match
      </TournamentGameTitle>
      <GameField>
-         {dataIsLoaded && 
+         {dataIsLoaded &&
          <>
          <UserGameField id={firstUser} 
-         onClick={onUserFieldClick}
-         borderColor={selectedWinner == firstUser ? "mediumseagreen" : null}
-         background={selectedWinner == firstUser ? "lightGreen" : null}
-         >{firstUser}</UserGameField>
-<UserGameField id={secondUser} 
-         onClick={onUserFieldClick}
-         borderColor={selectedWinner == secondUser ? "mediumseagreen" : null}
-         background={selectedWinner == secondUser ? "lightGreen" : null}
+                        onClick={onUserFieldClick}
+                        borderColor={selectedWinner == firstUser ? "mediumseagreen" : null}
+                        background={selectedWinner == firstUser ? "lightGreen" : null}
+            >{firstUser}</UserGameField>
+        <UserGameField id={secondUser} 
+                        onClick={onUserFieldClick}
+                        borderColor={selectedWinner == secondUser ? "mediumseagreen" : null}
+                        background={selectedWinner == secondUser ? "lightGreen" : null}
          >{secondUser}</UserGameField>
          </>
          }
+
+         
+        {tournamentWinner && <UserWinnerField>
+            <UserWinnerTextTitle>Winner of tournament</UserWinnerTextTitle>
+            <UserWinnerName>{tournamentWinner}</UserWinnerName>
+        </UserWinnerField>}
+         
      </GameField>
    <TournamentGameFlex>
        <Button text={saveButtonTitle} onClick={onSave}/>

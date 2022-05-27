@@ -9,6 +9,7 @@ import java.util.List;
 @Builder
 public class TournamentRound {
     private Integer round;
+    private Boolean isRoundReady;
     private List<UserTournament> userTournaments;
     private Boolean isRoundEnd;
 }
