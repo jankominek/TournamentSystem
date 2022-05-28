@@ -63,3 +63,9 @@ export const UserWinnerName = styled(UserWinnerTextTitle)`
     font-weight: normal;
     font-size: 20px;
 `
+
+export const EnteredResult = styled.div`
+    font-size: 23px;
+    font-weight: bold;
+    color: ${colors.mediumDarkBlue};
+`

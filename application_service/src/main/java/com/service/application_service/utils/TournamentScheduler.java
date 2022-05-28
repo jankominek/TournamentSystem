@@ -2,11 +2,9 @@ package com.service.application_service.utils;
 
 import com.service.application_service.DTO.TournamentDto;
 import com.service.application_service.DTO.TournamentUserDto;
-import com.service.application_service.model.Tournament;
-import com.service.application_service.model.TournamentCourse;
-import com.service.application_service.model.TournamentRound;
-import com.service.application_service.model.UserTournament;
+import com.service.application_service.model.*;
 import com.service.application_service.repository.TournamentRepository;
+import com.service.application_service.repository.UserRepository;
 import com.service.application_service.service.TournamentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -17,6 +15,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 @Configuration
@@ -27,6 +26,8 @@ public class TournamentScheduler {
     TournamentRepository tournamentRepository;
     @Autowired
     TournamentService tournamentService;
+    @Autowired
+    UserRepository userRepository;
 
     @Scheduled(fixedDelay = 3000)
     public void updateTournamentData(){
@@ -37,7 +38,13 @@ public class TournamentScheduler {
         tournaments.stream().forEach( (tournament) -> {
             System.out.println("tournament time : " + tournament.getStartDate());
             Boolean isParticipantsFull = tournament.getUsers().size() == tournament.getMaxParticipants();
-            if(tournament.getStartDate().isBefore(currentTime) && !tournament.getIsReady() && isParticipantsFull){
+            if(tournament.getStartDate().isBefore(currentTime)
+                    && !tournament.getIsReady() && !isParticipantsFull && !tournament.getCanceled()){
+                tournament.setCanceled(true);
+                tournamentRepository.save(tournament);
+            }
+            if(tournament.getStartDate().isBefore(currentTime)
+                    && !tournament.getIsReady() && isParticipantsFull && !tournament.getCanceled()){
                 List<UserTournament> ut = organizeTournamentForUsers(tournament);
                 TournamentCourse tournamentCourse = organizeLadder(ut);
                 System.out.println(" -----------> shadeuler working");
@@ -46,13 +53,20 @@ public class TournamentScheduler {
                 tournament.setTournamentCourse(tournamentCourse);
                 tournamentRepository.save(tournament);
             }
-            if(tournament.getIsReady() && !tournament.getStatus()){
+            if(tournament.getIsReady() && !tournament.getStatus() && !tournament.getCanceled()){
                 tournament.getTournamentCourse().getTournamentRounds().stream().forEach( (tournamentRound) ->{
+                    if(tournament.getEndDate().isBefore(currentTime)){
+                        tournament.setCanceled(true);
+                        tournament.setStatus(true);
+                    }
                     if(tournamentRound.getIsRoundEnd()){
                         if(tournamentRound.getRound().equals(tournament.getTournamentCourse().getTournamentRounds().size())){
                             String winner = tournamentRound.getUserTournaments().get(0).getFirstUserResult();
                             tournament.setStatus(true);
                             tournament.setTournamentWinner(winner);
+                            User user = userRepository.findUserByUsername(winner).orElseThrow( () -> new NoSuchElementException("user not found!"));
+                            user.setRank(user.getRank() + 1);
+                            userRepository.save(user);
                             tournamentRepository.save(tournament);
                         }
                         else{

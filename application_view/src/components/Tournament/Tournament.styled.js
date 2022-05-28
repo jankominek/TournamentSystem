@@ -53,7 +53,7 @@ export const UserWinnerTextTitle = styled.div`
     font-size: 25px;
     padding: .5rem 2rem;
     font-weight: bold;
-    color: ${colors.brownOrange};
+    color: ${props => props.color || colors.brownOrange};
 `
 export const UserWinnerName = styled(UserWinnerTextTitle)`
     font-weight: normal;

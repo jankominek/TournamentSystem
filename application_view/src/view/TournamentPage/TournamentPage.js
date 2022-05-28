@@ -11,6 +11,7 @@ import axios from 'axios';
 import { ButtonContainer, Flex, TournamentButtonContainer, TournamentPageHeader, TournamentPageTitleContainer, TournamentPageWrapper, TournamentUserName } from './TournamentPage.styled'
 import { setTournamentState } from '../../redux/Tournaments'
 import { createTournamentValidator, dateValidation, numberValidation, textValidation } from '../../utils/validators/createTournamentValidator'
+import { PageingComponent } from '../../components/PageingComponent/PageingComponent'
 
 export const TournamentPage = () => {
 
@@ -107,7 +108,7 @@ export const TournamentPage = () => {
                     Tournament system
                 </TournamentPageTitleContainer>
                 <ButtonContainer>
-                    {userState.username && <TournamentUserName>Hello, {userState.firstName + '  ' + userState.lastName}</TournamentUserName>}
+                    {userState.username && <TournamentUserName>Hello, {userState.firstName + '  ' + userState.lastName} | rank : {userState.rank}</TournamentUserName>}
                     <Button text="login" onClick={onLoginButtonClick} {...buttonProps}/>
                     <Button text="register" onClick={onRegisterButtonClick} {...buttonProps}/>
                 </ButtonContainer>
@@ -121,10 +122,11 @@ export const TournamentPage = () => {
             />
 
             {tournamentList}
-
+            <PageingComponent data={tournaments}/>
             {isTournamenModalShowing && <Modal body={<CreateTournamentModal {...tournamentModalParams}/>}
                                                     width="60rem"
                                                     height="50rem"/>}
+                                            
         </TournamentPageWrapper>
   )
 }

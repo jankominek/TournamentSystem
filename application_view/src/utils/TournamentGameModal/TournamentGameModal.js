@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux';
 import { Button } from '../../components/Button/Button'
 import { colors } from '../theme';
-import { GameField, TournamentGameFlex, TournamentGameTitle, TournamentGameWrapper, UserGameField, UserWinnerField, UserWinnerName, UserWinnerTextTitle } from './TournamentGameModal.styled'
+import { EnteredResult, GameField, TournamentGameFlex, TournamentGameTitle, TournamentGameWrapper, UserGameField, UserWinnerField, UserWinnerName, UserWinnerTextTitle } from './TournamentGameModal.styled'
 
 export const TournamentGameModal = ({tournament, onModalClose, 
     onModalSave, saveButtonTitle, closeButtonTitle}) => {
@@ -33,7 +33,8 @@ export const TournamentGameModal = ({tournament, onModalClose,
         if(!tournament.status){
             const tournamentRound = tournament.tournamentCourse.tournamentRounds.find( (tour) => tour.isRoundEnd == false);
             setRound(tournamentRound?.round);
-            const usrTournament = tournamentRound?.userTournaments.filter( (usrTour) => usrTour.id.includes(userState.username));
+            const usrTournament = tournamentRound?.userTournaments.filter( (usrTour) =>( usrTour.firstUser == (userState.username) || usrTour.secondUser == (userState.username)));
+            console.log("tournament user : ", usrTournament);
             usrTournament && setFirstUser(usrTournament["firstUser"]);
             usrTournament && setSecondUser(usrTournament["secondUser"]);
             setUserTournament(usrTournament?.[0]);
@@ -78,6 +79,7 @@ export const TournamentGameModal = ({tournament, onModalClose,
 
                 }
             })
+        onModalClose();
     }
 
     const onSave = () => {
@@ -93,7 +95,7 @@ export const TournamentGameModal = ({tournament, onModalClose,
      </TournamentGameTitle>
      <GameField>
          {dataIsLoaded &&
-         <>
+         !userTournament.isResultCorrect ? <>
          <UserGameField id={firstUser} 
                         onClick={onUserFieldClick}
                         borderColor={selectedWinner == firstUser ? "mediumseagreen" : null}
@@ -104,7 +106,7 @@ export const TournamentGameModal = ({tournament, onModalClose,
                         borderColor={selectedWinner == secondUser ? "mediumseagreen" : null}
                         background={selectedWinner == secondUser ? "lightGreen" : null}
          >{secondUser}</UserGameField>
-         </>
+         </> : <EnteredResult>Result has been entered</EnteredResult>
          }
 
          

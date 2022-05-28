@@ -90,6 +90,7 @@ public class TournamentService {
                 .endDate(LocalDateTime.parse(tournamentDto.getEndDate(), format))
                 .isReady(false)
                 .status(false)
+                .canceled(false)
                 .maxParticipants(tournamentDto.getMaxParticipants())
                 .playerNumber(tournamentDto.getPlayerNumber())
                 .minRank(tournamentDto.getMinRank())

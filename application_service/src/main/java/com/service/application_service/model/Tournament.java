@@ -31,6 +31,7 @@ public class Tournament {
     private LocalDateTime endDate;
     private LocalDateTime deadlineStart;
     private LocalDateTime deadlineEnd;
+    private Boolean canceled;
     private Boolean isReady;
     private Boolean status;
     private Integer maxParticipants;

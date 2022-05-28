@@ -46,7 +46,7 @@ export const Tournament = (props) => {
       tournamentId: tournamentId,
       username: userState.username
     }
-    if(!isTournamentFully){
+    if(!isTournamentFully && userState.rank >= tournament.minRank){
       axios.post("http://localhost:8079/service/api/tournament/join", data)
       .then( response => {
           if(response.data){
@@ -60,9 +60,12 @@ const onTournamentModalClose = () => setIsModalShowing(false);
 const onModalGameSave = (selectedUser) => {
 
   setIsModalPlayTournamentShowing(false);
+
+  getTournamentById();
 }
 const onModalGameClose = () => {
     setIsModalPlayTournamentShowing(false);
+    getTournamentById();
 }
 
 
@@ -87,13 +90,18 @@ const onModalGameClose = () => {
   return (
     <>
     <TournamentComponentWrapper>
-      <DetailsField onClick={onShowDetailsClick}>Show details</DetailsField>
+      {userState.username && <DetailsField onClick={onShowDetailsClick}>Show details</DetailsField>}
       <TournamentContentText fontSize="35px" weight="bold" color={colors.brownOrange}>{name}</TournamentContentText>
       <TournamentContentText fontSize="20px" >{discipline}</TournamentContentText>
       {tournament?.status && 
         <UserWinnerField>
           <UserWinnerTextTitle>Winner of tournament</UserWinnerTextTitle>
           <UserWinnerName>{tournament.tournamentWinner}</UserWinnerName>
+        </UserWinnerField>
+      }
+      {tournament?.canceled && 
+        <UserWinnerField>
+          <UserWinnerTextTitle color="red">Canceled</UserWinnerTextTitle>
         </UserWinnerField>
       }
       {isMyTournamentsPage && tournament?.isReady && !tournament?.status && <Button text={"play"} onClick={onPlayTournament}
@@ -108,7 +116,7 @@ const onModalGameClose = () => {
 
     {isModalShowing && <Modal body={<TournamentDetialsModal tournament={tournament} 
     isTournamentFully={isTournamentFully} isMyTournamentsPage={isMyTournamentsPage} {...tournamentModalParams}/>} width="70rem"/>}
-    
+
     {isModalPlayTournamentShowing && <Modal body={<TournamentGameModal 
     tournament={tournament} {...tournamentModalGameParams}/>} width="70rem" height="35rem"/>}
     </>
