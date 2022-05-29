@@ -9,14 +9,17 @@ import com.service.application_service.repository.UserRepository;
 import com.service.application_service.security.PasswordConfig;
 import com.service.application_service.security.UserRole;
 import com.service.application_service.utils.ConfirmationToken;
+import com.service.application_service.utils.ResetPassword;
 import com.service.application_service.utils.UserConfirmationToken;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
@@ -44,7 +47,8 @@ public class UserService implements UserDetailsService {
     public Boolean createUser(RegistrationUserDto userDto){
 
         if(userRepository.findUserByUsername(userDto.getUsername()).isPresent()){
-            return false;
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User already exists");
+
         }
 
         System.out.println(userDto.getUsername() + "   " + userDto.getPassword());
@@ -122,6 +126,33 @@ public class UserService implements UserDetailsService {
         }
 
         return true;
+    }
+
+    public void forgotPassword(String email){
+        System.out.println("email : " + email);
+            User user = userRepository.findUserByUsername(email).orElseThrow( () -> new UsernameNotFoundException("user not found"));
+
+            String resetToken = UUID.randomUUID().toString();
+            user.setReset_token(resetToken);
+
+            userRepository.save(user);
+
+            emailSenderService.send(user.getUsername(), emailSenderService.resetTemplate(resetToken));
+
+    }
+
+    public void resetPassword(String email, String token, String password){
+        User user = userRepository.findUserByUsername(email).orElseThrow( () -> new UsernameNotFoundException("user not found"));
+
+        if(user.getReset_token().equals(token)){
+            user.setPassword(passwordConfig.passwordEncoder().encode(password));
+            userRepository.save(user);
+            throw new ResponseStatusException(HttpStatus.ACCEPTED, "Password changed successfully");
+        }else{
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Wrong token");
+        }
+
+
     }
 
 

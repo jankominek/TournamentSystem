@@ -4,6 +4,37 @@ import { Button } from '../components/Button/Button'
 import { Input } from '../components/Input/Input'
 import { ErrorMessage, ModalFlex, ModalTitle, ModalWrapper } from './ModalWrapper'
 import { createTournamentValidator } from './validators/createTournamentValidator'
+const types = [
+  {
+      name: "name",
+      type:"text"
+  },
+  {
+      name: "discipline",
+      type:"text"
+  },
+  {
+      name: "organizator",
+      type:"text"
+  },
+  {
+      name: "startDate",
+      type:"date"
+  },
+  {
+      name: "endDate",
+      type:"date"
+  },
+  {
+      name: "maxParticipants",
+      type:"number"
+  },
+  {
+      name: "minRank",
+      type:"number"
+  },
+]
+
 
 export const CreateTournamentModal = ({onModalClose, onModalSave, saveButtonTitle, closeButtonTitle}) => {
 
@@ -26,39 +57,7 @@ export const CreateTournamentModal = ({onModalClose, onModalSave, saveButtonTitl
         })
       }
 
-      console.log("modal data : ", modalData)
-
     const onSave = () => {
-      const types = [
-        {
-            name: "name",
-            type:"text"
-        },
-        {
-            name: "discipline",
-            type:"text"
-        },
-        {
-            name: "organizator",
-            type:"text"
-        },
-        {
-            name: "startDate",
-            type:"date"
-        },
-        {
-            name: "endDate",
-            type:"date"
-        },
-        {
-            name: "maxParticipants",
-            type:"number"
-        },
-        {
-            name: "minRank",
-            type:"number"
-        },
-    ]
     const validationResult = createTournamentValidator(modalData, types)
     setErrorMessage(validationResult);
         if(!validationResult){

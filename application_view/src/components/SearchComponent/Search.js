@@ -16,7 +16,7 @@ export const Search = (props) => {
 
     const onChange = (e) => {
         const tourName = e.target.value;
-        const selectedTournaments = data.filter( (tour) => tour.name.includes(tourName));
+        const selectedTournaments = data.filter( (tour) => tour.name.toLowerCase().includes(tourName));
         if(tourName === ""){
           onSearchChange(tournaments);
         }else{

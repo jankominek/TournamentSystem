@@ -12,6 +12,7 @@ import { ButtonContainer, Flex, TournamentButtonContainer, TournamentPageHeader,
 import { setTournamentState } from '../../redux/Tournaments'
 import { createTournamentValidator, dateValidation, numberValidation, textValidation } from '../../utils/validators/createTournamentValidator'
 import { PageingComponent } from '../../components/PageingComponent/PageingComponent'
+import {toast } from 'react-toastify';
 
 export const TournamentPage = () => {
 
@@ -20,9 +21,9 @@ export const TournamentPage = () => {
     const navigate = useNavigate();
 
     const userState = useSelector( state => state.user);
+    const tournamentsState = useSelector(state => state.tournaments.tournaments)
     const dispatch = useDispatch();
 
-    console.log("!!!!!!!!!", dateValidation("2022-05-03 15:00"));
     useEffect( () => {
         getAllTournaments();
     }, [])
@@ -30,10 +31,8 @@ export const TournamentPage = () => {
     const getAllTournaments = () => {
         axios.get(`http://localhost:8079/service/api/tournament/all`)
         .then( response => {
-            console.log("RELOADING ALL TOURNAMENTS")
-            console.log("XXXX : ", response.data)
-            setTournaments(response.data);
-            dispatch(setTournamentState(response.data))
+            setTournaments([...response.data]);
+            dispatch(setTournamentState([...response.data]))
         })
     }
 
@@ -49,7 +48,7 @@ export const TournamentPage = () => {
     ))
 
    
-
+        
     const onLoginButtonClick = () => navigate("/login");
 
     const onRegisterButtonClick = () => navigate("/register");
@@ -69,7 +68,6 @@ export const TournamentPage = () => {
     }
 
     const onSearchChange = (data) => {
-        console.log("returned data : ",data)
         setTournaments(data);
     }
 
@@ -83,6 +81,10 @@ export const TournamentPage = () => {
             axios.post("http://localhost:8079/service/api/tournament/create", data)
                         .then(response =>{
                             getAllTournaments();
+                            toast.success("Tournament created")
+
+                        }).catch( err => {
+                            toast.error(err.response.data.message);
                         })
         }
         
@@ -100,7 +102,11 @@ export const TournamentPage = () => {
         closeButtonTitle : "close"
     }
 
+    const onPageChange = (data) => {
+        setTournaments(data);
+    }
 
+    console.log("tournament page reload..")
   return (
         <TournamentPageWrapper>
             <TournamentPageHeader>
@@ -122,11 +128,11 @@ export const TournamentPage = () => {
             />
 
             {tournamentList}
-            <PageingComponent data={tournaments}/>
+            {tournamentsState && <PageingComponent data={tournamentsState} onPageChange={onPageChange}/>}
             {isTournamenModalShowing && <Modal body={<CreateTournamentModal {...tournamentModalParams}/>}
                                                     width="60rem"
                                                     height="50rem"/>}
-                                            
+                             
         </TournamentPageWrapper>
   )
 }

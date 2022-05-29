@@ -1,9 +1,37 @@
-import React from 'react'
-import { Flex, TitleHeaderFlex, TournamentDetailsText, TournamentDetailsTextKey, TournamentDetailsTextValue, TournamentDetialsModalWrapper, TournamentDetialsTitle, TournamentStatus } from './TournamentDetailsModal.styled'
+import React, { useEffect, useState } from 'react'
+import { Flex, InfoContainer, TitleHeaderFlex, TournamentDetailsText, TournamentDetailsTextKey, TournamentDetailsTextValue, TournamentDetialsModalWrapper, TournamentDetialsTitle, TournamentRoundContainer, TournamentRoundField, TournamentRoundText, TournamentRoundUserField, TournamentStatus } from './TournamentDetailsModal.styled'
 import {Button} from '../../components/Button/Button';
 import { colors } from '../theme';
 export const TournamentDetialsModal = ({tournament, isTournamentFully, onModalClose, 
   onModalJoin, joinButtonTitle, closeButtonTitle, isMyTournamentsPage}) => {
+
+    const [rounds, setRounds] = useState();
+
+    useEffect( () => {
+
+    }, [])
+
+    console.log("tournament : ", tournament)
+    const prepareRounds = () => {
+        const selectedRounds = tournament.tournamentCourse.tournamentRounds.filter( tour => tour.isRoundReady);
+        const mappedRounds = selectedRounds.map( (round) => (
+          <TournamentRoundField>
+            <TournamentRoundText bold color={colors.brownOrange}>Round : {round.round}</TournamentRoundText>
+            {round.userTournaments.map( (userTour) => (
+              <TournamentRoundUserField>
+                <TournamentRoundText>{userTour.firstUser + "  vs  " + userTour.secondUser}</TournamentRoundText>
+            </TournamentRoundUserField>
+            ))}
+          </TournamentRoundField>
+        ))
+        return(
+            <>
+            {mappedRounds}
+            </>
+        )
+
+
+    }
 
   return (
     <TournamentDetialsModalWrapper>
@@ -16,6 +44,8 @@ export const TournamentDetialsModal = ({tournament, isTournamentFully, onModalCl
         </TournamentStatus>
       </TitleHeaderFlex>
       <Flex>
+        <InfoContainer>
+        <Flex>
         <TournamentDetailsTextKey>Organizer : </TournamentDetailsTextKey>
         <TournamentDetailsTextValue>{tournament?.organizer}</TournamentDetailsTextValue>
       </Flex>
@@ -51,6 +81,11 @@ export const TournamentDetialsModal = ({tournament, isTournamentFully, onModalCl
       <Flex>
       <Button text={joinButtonTitle} onClick={onModalJoin}/>
       <Button text={closeButtonTitle} onClick={onModalClose}/>
+      </Flex>
+        </InfoContainer>
+        <TournamentRoundContainer>
+          {tournament && prepareRounds()}
+        </TournamentRoundContainer>
       </Flex>
     </TournamentDetialsModalWrapper>
   )

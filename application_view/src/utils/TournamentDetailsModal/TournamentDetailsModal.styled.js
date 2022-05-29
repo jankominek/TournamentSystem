@@ -36,3 +36,44 @@ export const Flex = styled.div`
     display: flex;
     margin: .3rem 0;
 `
+
+export const TournamentRoundField = styled.div`
+    width: 25rem;
+    min-height: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: ${colors.lightGray};
+    border-radius: 10px;
+    padding: .5rem 0rem;
+    margin: .5rem 0rem;
+`
+export const InfoContainer = styled.div`
+    width: 50%;
+`
+
+export const TournamentRoundContainer = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 50%;
+    height: 100%;
+`
+export const TournamentRoundText = styled.div`
+    font-size: 20px;
+    font-weight: ${props => props.bold ? "bold" : "normal"};
+    color: ${props => props.color || colors.mediumDarkBlue};
+`
+export const TournamentRoundUserField = styled.div`
+    width: 80%;
+    height: 2rem;
+    border: 1px solid white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: ${colors.white};
+    border-radius: 10px;
+    margin: .2rem 0rem;
+`

@@ -31,12 +31,9 @@ public class TournamentScheduler {
 
     @Scheduled(fixedDelay = 3000)
     public void updateTournamentData(){
-        System.out.println("scheduler");
         LocalDateTime currentTime = LocalDateTime.now();
-        System.out.println("curent time : " + currentTime);
         List<Tournament> tournaments = tournamentService.getAllTournament();
         tournaments.stream().forEach( (tournament) -> {
-            System.out.println("tournament time : " + tournament.getStartDate());
             Boolean isParticipantsFull = tournament.getUsers().size() == tournament.getMaxParticipants();
             if(tournament.getStartDate().isBefore(currentTime)
                     && !tournament.getIsReady() && !isParticipantsFull && !tournament.getCanceled()){
@@ -47,7 +44,6 @@ public class TournamentScheduler {
                     && !tournament.getIsReady() && isParticipantsFull && !tournament.getCanceled()){
                 List<UserTournament> ut = organizeTournamentForUsers(tournament);
                 TournamentCourse tournamentCourse = organizeLadder(ut);
-                System.out.println(" -----------> shadeuler working");
                 tournament.setUserTournaments(ut);
                 tournament.setIsReady(true);
                 tournament.setTournamentCourse(tournamentCourse);

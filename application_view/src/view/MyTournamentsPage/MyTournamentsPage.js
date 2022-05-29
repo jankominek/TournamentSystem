@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux';
+import { PageingComponent } from '../../components/PageingComponent/PageingComponent';
 import { Tournament } from '../../components/Tournament/Tournament';
 import { MyTournamentsPageWrapper, MyTournamentsTitle, TournamentsWrapperContent } from './MyTournamentsPage.styled'
 
@@ -13,10 +14,13 @@ export const MyTournamentsPage = () => {
     useEffect( () => {
         userState && axios.get(`http://localhost:8079/service/api/tournament/userTournaments/${userState.username}`)
             .then( response => {
-                console.log(response.data)
                 setUserTournaments(response.data)
             })
     }, [userState]);
+
+    const onPageChange = (data) => {
+        setUserTournaments(data);
+    }
 
 const tournamentList = userTournaments && userTournaments.map( (tournament) => (
     <Tournament   tournamentId={tournament.id}
@@ -33,6 +37,7 @@ const tournamentList = userTournaments && userTournaments.map( (tournament) => (
     <MyTournamentsPageWrapper>
         <MyTournamentsTitle>My tournaments</MyTournamentsTitle>
             {tournamentList}
+            {/* {userTournaments && <PageingComponent data={userTournaments} onPageChange={onPageChange}/>} */}
     </MyTournamentsPageWrapper>
   )
 }

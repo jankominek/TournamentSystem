@@ -11,6 +11,7 @@ export const SigningFormWrapper = styled.div`
 export const SigningBox = styled.div`
     padding: 5rem 8rem;
     display: flex;
+    position: relative;
     flex-direction: column;
     justify-content: center;
     align-items: center;
@@ -30,4 +31,15 @@ export const SigningModalWrapper = styled.div`
 `
 export const Flex = styled.div`
     display: flex;
+`
+
+export const SigningOption = styled.div`
+    position: absolute;
+    cursor: pointer;
+    bottom: 0;
+    color: ${colors.gray};
+    margin-bottom: 2rem;
+    &:hover{
+        border-bottom: 1px solid ${colors.gray};
+    }
 `

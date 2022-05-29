@@ -22,8 +22,6 @@ export const Tournament = (props) => {
 
   const isTournamentFully = !(tournament?.users?.length < tournament?.maxParticipants);
 
-  console.log("TOURNAMENT : ", tournament)
-
   useEffect( () => {
     getTournamentById();
   }, [])
@@ -31,7 +29,6 @@ export const Tournament = (props) => {
   const getTournamentById = () => {
     axios.get(`http://localhost:8079/service/api/tournament/${tournamentId}`)
       .then(response => {
-        console.log(response.data)
           setTournament(response.data)
       }) 
   }

@@ -3,8 +3,10 @@ import { colors } from '../../utils/theme';
 
 export const ModalWrapper = styled.div`
     width: 100%;
-    height: 100%;
+    height: 100vh;
     position: absolute;
+    top: 0;
+    left:0;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -12,7 +14,7 @@ export const ModalWrapper = styled.div`
 
 export const ModalBackground = styled.div`
     width: 100%;
-    height: 100vh;
+    min-height: 100%;
     position: absolute;
     background: ${colors.white};
     opacity: .4;

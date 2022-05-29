@@ -28,6 +28,7 @@ public class User implements UserDetails {
     private String password;
     @DBRef
     private List<Tournament> tournaments;
+    private String reset_token;
     private Integer rank;
     Collection<? extends GrantedAuthority> grantedAuthorities;
     private boolean isAccountNonExpired;

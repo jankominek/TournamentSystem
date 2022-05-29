@@ -10,7 +10,9 @@ import com.service.application_service.repository.UserRepository;
 import com.service.application_service.utils.UpdatedUserTournament;
 import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.swing.text.html.ObjectView;
 import java.time.LocalDateTime;
@@ -77,6 +79,11 @@ public class TournamentService {
     public void createTournament(TournamentDto tournamentDto){
 
         DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        LocalDateTime current = LocalDateTime.now();
+        if(LocalDateTime.parse(tournamentDto.getStartDate(), format).isBefore(current)){
+            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "You cannot create tournament in the past");
+        }
+
         User user = userRepository.findUserByUsername(tournamentDto.getOrganizer()).get();
 
         TournamentCourse tournamentCourse = new TournamentCourse();

@@ -1,28 +1,32 @@
 import React, { useEffect, useState } from 'react'
-import { PageingWrapper } from './PageingComponent.styled'
+import { PageingWrapper, PagingElement, PagingWrapper } from './PageingComponent.styled'
 
-const ELEMENT_PER_PAGE = 3;
+const ELEMENT_PER_PAGE = 2;
 
-export const PageingComponent = ({data}) => {
+export const PageingComponent = ({data, onPageChange}) => {
 
-    const [preparedData, setPreparedData] = useState();
-    const [selectedPageNumber, setSelectedPageNumber] = useState(3);
+    const [originalData, setOriginalData] = useState();
 
     useEffect( () => {
-        prepareDataContent();
-    }, [])
+        data && setOriginalData(data);
+        data && onPageChange(prepareDataContent(1));
+    }, [data])
+    const prepareDataContent = (selectedPageNumber) => {
+        const selectedData = originalData?.slice((selectedPageNumber-1)*ELEMENT_PER_PAGE,ELEMENT_PER_PAGE*selectedPageNumber)
+        return selectedData;
+    } 
 
-    
+    const onPageClick = (e) => {
+        const pageValue = e.target.id;
+        const dataToReturn = prepareDataContent(pageValue);
+        onPageChange(dataToReturn);
+    }
 
-const prepareDataContent = () => {
-    const selectedData = data.slice((selectedPageNumber-1)*ELEMENT_PER_PAGE,ELEMENT_PER_PAGE*selectedPageNumber)
-    console.log("preparedDAta : ", selectedData);
-    setPreparedData(selectedData);
-} 
-    
+    const pagingList = data && Array(Math.ceil(data.length/ELEMENT_PER_PAGE)).fill(0).map((_, i) => <PagingElement onClick={onPageClick} id={i+1}>{i+1}</PagingElement>);
+
   return (
-    <PageingWrapper>
-
-    </PageingWrapper>
+    <PagingWrapper>
+        {pagingList}
+    </PagingWrapper>
   )
 }
