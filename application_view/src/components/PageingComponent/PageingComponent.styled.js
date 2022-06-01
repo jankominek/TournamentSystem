@@ -4,7 +4,9 @@ import { colors } from "../../utils/theme";
 export const PagingWrapper = styled.div`
     display: flex;
     padding: 1rem 2rem;
-    position: absolute;
+    // position: static;
+    // box-sizing: border-box;
+    // padding: 5rem 0rem;
     bottom:0;
 `
 export const PagingElement = styled.div`

@@ -96,7 +96,7 @@ const onModalGameClose = () => {
           <UserWinnerName>{tournament.tournamentWinner}</UserWinnerName>
         </UserWinnerField>
       }
-      {tournament?.canceled && 
+      {tournament && tournament.canceled && !tournament?.status &&
         <UserWinnerField>
           <UserWinnerTextTitle color="red">Canceled</UserWinnerTextTitle>
         </UserWinnerField>

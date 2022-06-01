@@ -38,15 +38,16 @@ export const Flex = styled.div`
 `
 
 export const TournamentRoundField = styled.div`
-    width: 25rem;
+    min-width: 25rem;
     min-height: 2rem;
     display: flex;
+    // padding: 0rem 2rem;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     background: ${colors.lightGray};
     border-radius: 10px;
-    padding: .5rem 0rem;
+    padding: .5rem 1rem;
     margin: .5rem 0rem;
 `
 export const InfoContainer = styled.div`
@@ -57,22 +58,23 @@ export const TournamentRoundContainer = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
+    margin-left: 5rem;
     flex-direction: column;
     width: 50%;
-    height: 100%;
 `
 export const TournamentRoundText = styled.div`
     font-size: 20px;
     font-weight: ${props => props.bold ? "bold" : "normal"};
-    color: ${props => props.color || colors.mediumDarkBlue};
+    color: ${props => props.color || colors.mediumDarkBlue};   
 `
 export const TournamentRoundUserField = styled.div`
-    width: 80%;
-    height: 2rem;
+    min-width: 80%;
+    min-height: 2rem;
     border: 1px solid white;
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-direction: column;
     background: ${colors.white};
     border-radius: 10px;
     margin: .2rem 0rem;

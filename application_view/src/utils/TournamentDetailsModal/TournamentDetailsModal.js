@@ -16,10 +16,14 @@ export const TournamentDetialsModal = ({tournament, isTournamentFully, onModalCl
         const selectedRounds = tournament.tournamentCourse.tournamentRounds.filter( tour => tour.isRoundReady);
         const mappedRounds = selectedRounds.map( (round) => (
           <TournamentRoundField>
+            asd
             <TournamentRoundText bold color={colors.brownOrange}>Round : {round.round}</TournamentRoundText>
             {round.userTournaments.map( (userTour) => (
               <TournamentRoundUserField>
-                <TournamentRoundText>{userTour.firstUser + "  vs  " + userTour.secondUser}</TournamentRoundText>
+                <TournamentRoundText>{userTour.firstUser}</TournamentRoundText>
+                <TournamentRoundText>vs</TournamentRoundText>
+                <TournamentRoundText>{userTour.secondUser}</TournamentRoundText>
+                
             </TournamentRoundUserField>
             ))}
           </TournamentRoundField>

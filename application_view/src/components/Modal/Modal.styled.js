@@ -22,7 +22,7 @@ export const ModalBackground = styled.div`
 
 export const ModalBox = styled.div`
     width: ${props => props.width || "50rem"};
-    height: ${props => props.height || "30rem"};
+    min-height: ${props => props.height || "30rem"};
     display: flex;
     z-index: 1;
     background: ${colors.mediumDarkBlue};
