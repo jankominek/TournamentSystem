@@ -33,18 +33,6 @@ public class ApplicationServiceSecurityConfig extends WebSecurityConfigurerAdapt
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-//        http.cors().and().csrf().disable().authorizeRequests().anyRequest().permitAll();
-//                http.cors().and()
-//                        .csrf().disable()
-//                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-//                .and()
-//                .addFilter(new JwtTokenFilter(authenticationManager()))
-//                .authorizeRequests()
-//                .antMatchers("/js/**", "/css/**", "/img/**").permitAll()
-//                .antMatchers("/**").permitAll()
-////                .antMatchers("/admin/**").hasRole(UserRole.ADMIN.name())
-//                .anyRequest()
-//                .authenticated();
         http
                 .csrf().disable()
                 .cors()
@@ -58,7 +46,7 @@ public class ApplicationServiceSecurityConfig extends WebSecurityConfigurerAdapt
                 .antMatchers("/register/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/forgot/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/reset/**").permitAll()
-                .anyRequest().permitAll();
+                .anyRequest().authenticated();
     }
 
     @Override

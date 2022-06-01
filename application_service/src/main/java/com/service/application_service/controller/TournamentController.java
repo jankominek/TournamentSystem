@@ -30,7 +30,6 @@ public class TournamentController {
 
     @PostMapping("/userTournament/result")
     public Boolean saveTournamentResult(@RequestBody UpdatedUserTournament updatedUserTournament){
-        System.out.println("XXXXXXXXX" + updatedUserTournament.getName());
         return tournamentService.saveTournamentResult(updatedUserTournament);
     }
 
